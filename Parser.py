@@ -1,6 +1,6 @@
 import logging
 import sly
-from Ast_Mejorado import *
+from AST import *
 from rich import print as rprint
 from Lexer import Lexer
 
