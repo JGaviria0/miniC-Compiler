@@ -1,0 +1,11 @@
+// Dot
+digraph AST {
+	node [color=deepskyblue shape=box style=filled]
+	edge [arrowhead=none]
+	n01 [label=decls]
+	n02 [label="Func Declaration
+name:int 
+external:False
+params:node_test(name='direct_declarator')"]
+	n01 -> n02
+}

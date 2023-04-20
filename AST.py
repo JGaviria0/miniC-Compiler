@@ -151,6 +151,10 @@ class ConstDeclaration(Declaration):
 class FuncDeclarationStmt(Statement):
 	name: str
 	body: List[Statement]=field(default_factory=list)
+
+@dataclass
+class TranslationUnit(Statement):
+	decls : List[Statement]
 # ----------------------------------------
 # Expression representan valores
 #
@@ -183,11 +187,17 @@ class RenderAST(Visitor):
         dot = cls()
         n.accept(dot)
         return dot.dot
-    
+    def visit(self, n:TranslationUnit):
+        name = self.name()
+        self.dot.node(name, label='decls')
+        for i in n.decls:
+            self.dot.edge(name, i.accept(self))
+
     def visit(self, n:FuncDeclaration):
         name = self.name()
-        self.dot.node(name, label="Func\\nDeclaration{n.Static} ")
+        self.dot.node(name, label=f"Func Declaration\nname:{n.name} \nexternal:{n.Static}\nparams:{n.params}")
         return name
+
 
    # def visit(self, n:Unary):
     #    name = self.name()

@@ -13,12 +13,12 @@ class Parser(sly.Parser):
 
 	@_("translation_unit")
 	def program(self, p):
-		return p.translation_unit
+		return TranslationUnit(p.translation_unit)
 
 	@_("external_declaration")
 	def translation_unit(self, p):
 		return [p.external_declaration]
-#....
+
 	@_("translation_unit external_declaration")
 	def translation_unit(self, p):
 		return p.translation_unit+[p.external_declaration]
@@ -52,7 +52,7 @@ class Parser(sly.Parser):
 		
 	@_("empty")
 	def declaration_list_opt(self, p):
-		return p.empty
+		return 
 		
 	@_("declaration_list")
 	def declaration_list_opt(self, p):
@@ -409,7 +409,10 @@ if __name__ == '__main__':
 	txt = open(sys.argv[1], encoding='utf-8').read()
 
 	ast = p.parse(l.tokenize(txt))
-	#dot = RenderAST.render(ast)
+	dot = RenderAST.render(ast)
 	print("Archivo minic.txt creado con exito")
 	print(ast)
-	#print(dot)
+
+	f = open('tree.dot','a')
+	f.write(str(dot))
+	f.close()
