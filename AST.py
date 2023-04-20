@@ -146,6 +146,11 @@ class VarDeclaration(Declaration):
 class ConstDeclaration(Declaration):
     name: str
     value: Expression
+    
+@dataclass
+class TypeDeclaration(Statement):
+    Type: str
+    body: Statement
 
 @dataclass
 class FuncDeclarationStmt(Statement):
@@ -154,6 +159,10 @@ class FuncDeclarationStmt(Statement):
 
 @dataclass
 class TranslationUnit(Statement):
+	decls : List[Statement]
+
+@dataclass
+class Parameter_declaration(Statement):
 	decls : List[Statement]
 # ----------------------------------------
 # Expression representan valores
@@ -196,7 +205,26 @@ class RenderAST(Visitor):
     def visit(self, n:FuncDeclaration):
         name = self.name()
         self.dot.node(name, label=f"Func Declaration\nname:{n.name} \nexternal:{n.Static}\nparams:{n.params}")
+        self.dot.edge(name, n.params.accept(self))
         return name
+    def visit(self, n:FuncDeclarationStmt):
+        name = self.name()
+        self.dot.node(name, label=f"Func Declaration\nname:{n.name} \n body:{n.body}")
+        self.dot.edge(name, n.body.accept(self))
+        return name
+    def visit(self, n:TypeDeclaration):
+        name = self.name()
+        self.dot.node(name, label=f"Type Declaration\nType:{n.Type} \n body:{n.body}")
+	
+		
+        return name
+    def visit(self, n:Parameter_declaration):
+        name = self.name()
+        self.dot.node(name, label='decls')
+        for i in n.decls:
+            self.dot.edge(name, i.accept(self))
+       
+        
 
 
    # def visit(self, n:Unary):

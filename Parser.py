@@ -73,7 +73,7 @@ class Parser(sly.Parser):
 		
 	@_("direct_declarator")
 	def declarator(self, p):
-		return node_test("direct_declarator")
+		return p.direct_declarator
 		
 	@_("'*' declarator")
 	def declarator(self, p):
@@ -89,28 +89,28 @@ class Parser(sly.Parser):
 		
 	@_("direct_declarator '(' ')'")
 	def direct_declarator(self, p):
-		#return Trinary_V2(p.direct_declarator,p[1],p[2])
-		pass
+		return FuncDeclarationStmt(p.direct_declarator,[])
+		
 	@_("parameter_list")
 	def parameter_type_list(self, p):
-		#return p.parameter_list
-		pass
+		return Parameter_declaration(p.parameter_list)
+		
 	@_("parameter_list ',' ELLIPSIS")
 	def parameter_type_list(self, p):
 		#return Trinary_V2(p.parameter_list,p[1],p[2])
 		pass
 	@_("parameter_declaration")
 	def parameter_list(self, p):
-		#return p.parameter_declaration
-		pass
+		return [p.parameter_declaration]
+		
 	@_("parameter_list ',' parameter_declaration")
 	def parameter_list(self, p):
-		#return Binary(p.parameter_list,p[1],p.parameter_declaration)
-		pass
+		return p.parameter_list+[p.parameter_declaration]
+		
 	@_("type_specifier declarator")
 	def parameter_declaration(self, p):
-		#return Binary_Nop(p.type_specifier,p.declarator)
-		pass
+		return TypeDeclaration(p.type_specifier,p.declarator)
+		
 	@_("'{' declaration_list_opt statement_list '}'")
 	def compound_statement(self, p):
 		return node_test("compound_statement")
@@ -413,6 +413,6 @@ if __name__ == '__main__':
 	print("Archivo minic.txt creado con exito")
 	print(ast)
 
-	f = open('tree.dot','a')
+	f = open('tree.dot','w')
 	f.write(str(dot))
 	f.close()

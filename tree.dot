@@ -6,6 +6,14 @@ digraph AST {
 	n02 [label="Func Declaration
 name:int 
 external:False
-params:node_test(name='direct_declarator')"]
+params:FuncDeclarationStmt(name='main', body=TypeDeclaration(Type='int', body='a'))"]
+	n03 [label="Func Declaration
+name:main 
+ body:TypeDeclaration(Type='int', body='a')"]
+	n04 [label="Type Declaration
+Type:int 
+ body:a"]
+	n03 -> n04
+	n02 -> n03
 	n01 -> n02
 }
