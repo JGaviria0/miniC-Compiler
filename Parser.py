@@ -52,7 +52,7 @@ class Parser(sly.Parser):
 		
 	@_("empty")
 	def declaration_list_opt(self, p):
-		return 
+		return []
 		
 	@_("declaration_list")
 	def declaration_list_opt(self, p):
@@ -60,12 +60,12 @@ class Parser(sly.Parser):
 		
 	@_("declaration")
 	def declaration_list(self, p):
-		return  p.declaration
+		return  [p.declaration]
 		
 #....	
 	@_("declaration_list declaration")
 	def declaration_list(self, p):
-		pass #p.declaration_list+p.declaration
+		return p.declaration_list+[p.declaration]
 		
 	@_("INT", "FLOAT", "CHAR", "VOID")
 	def type_specifier(self, p):
@@ -113,13 +113,12 @@ class Parser(sly.Parser):
 		
 	@_("'{' declaration_list_opt statement_list '}'")
 	def compound_statement(self, p):
-		return node_test("compound_statement")
+		return p.declaration_list_opt + p.statement_list
 		
 
 	@_("'{' declaration_list_opt '}'")
 	def compound_statement(self, p):
-		#return Trinary_V2(p.declaration_list_opt,p[0],p[2])
-		return node_test("compound_statement")
+		return p.declaration_list_opt
 	
 	@_("expression ';'")
 	def expression_statement(self, p):
@@ -290,11 +289,11 @@ class Parser(sly.Parser):
 		pass
 	@_("open_statement")
 	def statement(self, p):
-		#return p.open_statement
+		return VarDeclaration(name='int', expr='cde', end=';', Ext=False) 
 		pass
 	@_("closed_statement")
 	def statement(self, p):
-		#return p.closed_statement
+		return VarDeclaration(name='int', expr='cde', end=';', Ext=False) 
 		pass
 	@_("compound_statement")
 	def other_statement(self, p):
@@ -378,13 +377,13 @@ class Parser(sly.Parser):
 
 	@_("statement")
 	def statement_list(self, p):
-		return node_test("lista")
+		return [p.statement]
 		
 
 	@_("statement_list statement")
 	def statement_list(self, p):
-	#	return Binary_Decl(p.statement_list,p.statement) 
-		pass
+		return p.statement_list + [p.statement]
+
 	@_("")
 	def empty(self, p):
 		pass

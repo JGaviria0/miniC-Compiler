@@ -4,20 +4,40 @@ digraph AST {
 	edge [arrowhead=none]
 	n01 [label=decls]
 	n02 [label="Func Declaration
-name:int 
+type:int 
 external:False
-params:FuncDeclarationStmt(name='main', body=[TypeDeclaration(Type='int', body='a'), TypeDeclaration(Type='int', body='b')])"]
-	n03 [label="Func Declaration
+"]
+	n03 [label="Funcion 
 name:main 
- body:[TypeDeclaration(Type='int', body='a'), TypeDeclaration(Type='int', body='b')]"]
-	n04 [label="Type Declaration
+"]
+	n04 [label="Param
 Type:int 
- body:a"]
+ name:a"]
 	n03 -> n04
-	n05 [label="Type Declaration
+	n05 [label="Param
 Type:int 
- body:b"]
+ name:b"]
 	n03 -> n05
+	n06 [label="Param
+Type:int 
+ name:c"]
+	n03 -> n06
 	n02 -> n03
+	n07 [label="Var declaraiton
+type: int
+expr: abc"]
+	n02 -> n07
+	n08 [label="Var declaraiton
+type: int
+expr: abde"]
+	n02 -> n08
+	n09 [label="Var declaraiton
+type: int
+expr: abdf"]
+	n02 -> n09
+	n10 [label="Var declaraiton
+type: int
+expr: cde"]
+	n02 -> n10
 	n01 -> n02
 }

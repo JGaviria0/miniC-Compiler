@@ -5,9 +5,6 @@ from multimethod import multimeta
 import graphviz as gpv
 from typing import Any, List
 
-
-
-
 class Visitor(metaclass=multimeta):
 	pass
 
@@ -204,28 +201,32 @@ class RenderAST(Visitor):
 
     def visit(self, n:FuncDeclaration):
         name = self.name()
-        self.dot.node(name, label=f"Func Declaration\nname:{n.name} \nexternal:{n.Static}\nparams:{n.params}")
+        self.dot.node(name, label=f"Func Declaration\ntype:{n.name} \nexternal:{n.Static}\n")
         self.dot.edge(name, n.params.accept(self))
+        for i in n.body:
+            print(i)
+            self.dot.edge(name, i.accept(self))
         return name
     def visit(self, n:FuncDeclarationStmt):
         name = self.name()
-        self.dot.node(name, label=f"Func Declaration\nname:{n.name} \n body:{n.body}")
+        self.dot.node(name, label=f"Funcion \nname:{n.name} \n")
         for i in n.body:
             self.dot.edge(name, i.accept(self))
         return name
     def visit(self, n:TypeDeclaration):
         name = self.name()
-        self.dot.node(name, label=f"Type Declaration\nType:{n.Type} \n body:{n.body}")
-	
-		
+        self.dot.node(name, label=f"Param\nType:{n.Type} \n name:{n.body}")
         return name
     def visit(self, n:Parameter_declaration):
         name = self.name()
         self.dot.node(name, label='decls')
         for i in n.decls:
             self.dot.edge(name, i.accept(self))
-       
-        
+    
+    def visit(self, n:VarDeclaration):
+        name = self.name()
+        self.dot.node(name, label=f'Var declaraiton\ntype: {n.name}\nexpr: {n.expr}')
+        return name
 
 
    # def visit(self, n:Unary):
