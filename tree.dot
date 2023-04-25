@@ -6,14 +6,18 @@ digraph AST {
 	n02 [label="Func Declaration
 name:int 
 external:False
-params:FuncDeclarationStmt(name='main', body=TypeDeclaration(Type='int', body='a'))"]
+params:FuncDeclarationStmt(name='main', body=[TypeDeclaration(Type='int', body='a'), TypeDeclaration(Type='int', body='b')])"]
 	n03 [label="Func Declaration
 name:main 
- body:TypeDeclaration(Type='int', body='a')"]
+ body:[TypeDeclaration(Type='int', body='a'), TypeDeclaration(Type='int', body='b')]"]
 	n04 [label="Type Declaration
 Type:int 
  body:a"]
 	n03 -> n04
+	n05 [label="Type Declaration
+Type:int 
+ body:b"]
+	n03 -> n05
 	n02 -> n03
 	n01 -> n02
 }

@@ -93,7 +93,7 @@ class Parser(sly.Parser):
 		
 	@_("parameter_list")
 	def parameter_type_list(self, p):
-		return Parameter_declaration(p.parameter_list)
+		return p.parameter_list
 		
 	@_("parameter_list ',' ELLIPSIS")
 	def parameter_type_list(self, p):

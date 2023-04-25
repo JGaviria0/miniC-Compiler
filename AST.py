@@ -210,7 +210,8 @@ class RenderAST(Visitor):
     def visit(self, n:FuncDeclarationStmt):
         name = self.name()
         self.dot.node(name, label=f"Func Declaration\nname:{n.name} \n body:{n.body}")
-        self.dot.edge(name, n.body.accept(self))
+        for i in n.body:
+            self.dot.edge(name, i.accept(self))
         return name
     def visit(self, n:TypeDeclaration):
         name = self.name()
