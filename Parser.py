@@ -123,15 +123,19 @@ class Parser(sly.Parser):
 	@_("expression ';'")
 	def expression_statement(self, p):
 		#return Unary(p[1],p.expression)
-		pass
+		print(f'entre aaqui? {p.expression}')
+		return p.expression
+	
 	@_("equality_expression")
 	def expression(self, p):
-		#return p.equality_expression
-		pass
+		return p.equality_expression
+		
 	@_("assigment_expression")
 	def expression(self, p):
-		#return p.assigment_expression
-		pass
+		print(f"es un assigment 134 equ_:{p.assigment_expression} ")
+
+		return p.assigment_expression
+		
 
 
 	@_("equality_expression '='   expression",
@@ -141,21 +145,22 @@ class Parser(sly.Parser):
 	   "equality_expression MULEQ expression",
 	   "equality_expression SUBEQ expression")
 	def assigment_expression(self, p):
-		#return Binary(p.equality_expression,p[1],p.expression)
-		pass
+		print(f"es un assigment 145 equ_:{p.equality_expression} expr: {p.expression}")
+		return Binary(p.equality_expression,p[1],p.expression)
+		
 	@_("relational_expression")
 	def equality_expression(self, p):
-		#return p.relational_expression
-		pass
+		return p.relational_expression
+		
 	@_("equality_expression EQ relational_expression",
 	   "equality_expression NE relational_expression")
 	def equality_expression(self, p):
-		#return Binary(p.equality_expression,p[1],p.relational_expression)
-		pass
+		return Binary(p.equality_expression,p[1],p.relational_expression)
+		
 	@_("additive_expression")
 	def relational_expression(self, p):
-		#return p.additive_expression
-		pass
+		return p.additive_expression
+		
 	@_("relational_expression '<' additive_expression",
     	"relational_expression LT additive_expression",
 	    "relational_expression GT additive_expression",
@@ -165,12 +170,14 @@ class Parser(sly.Parser):
 	   "relational_expression LAND additive_expression",
 	   "relational_expression GE  additive_expression")
 	def relational_expression(self, p):
-		#Binary(p.relational_expression,p[1],p.additive_expression)
-		pass
+		
+		return Binary(p.relational_expression,p[1],p.additive_expression)
+
+		
 	@_("primary_expression")
 	def postfix_expression(self, p):
-		#return p.primary_expression
-		pass
+		return p.primary_expression
+		
 	@_("postfix_expression '(' argument_expression_list ')'")
 	def postfix_expression(self, p):
 		#return Quadnary_v4(p.postfix_expression,p[1],p.argument_expression_list,p[3])
@@ -193,8 +200,8 @@ class Parser(sly.Parser):
 		pass
 	@_("postfix_expression")
 	def unary_expression(self, p):
-		#return p.postfix_expression
-		pass
+		return p.postfix_expression
+		
 	@_("'-' unary_expression")
 	def unary_expression(self, p):
 		#return Unary(p[0],p.unary_expression)
@@ -217,55 +224,58 @@ class Parser(sly.Parser):
 		pass
 	@_("unary_expression")
 	def mult_expression(self, p):
-		#return p.unary_expression
-		pass
+		return p.unary_expression
+		
 	@_("mult_expression '*' unary_expression",
 	   "mult_expression '/' unary_expression",
 	   "mult_expression '%' unary_expression")
 	def mult_expression(self, p):
-		#return Binary(p.mult_expression,p[1],p.unary_expression)
-		pass
+		return Binary(p.mult_expression,p[1],p.unary_expression)
+		
 	@_("mult_expression")
 	def additive_expression(self, p):
-		#return p.mult_expression
-		pass
+		return p.mult_expression
+		
 	@_("additive_expression '+' mult_expression",
 	   "additive_expression '-' mult_expression")
 	def additive_expression(self, p):
-		#return Binary(p.additive_expression,p[1],p.mult_expression)
-		pass
+		return Binary(p.additive_expression,p[1],p.mult_expression)
+		
 	@_("ID")
 	def primary_expression(self, p):
-		#return Variable(p[0])
-		pass
+		
+		return ID(p[0])
+		
 	@_("INUMBER")
 	def primary_expression(self, p):
-		#return Variable(p[0])
-		pass
+		
+		return INUMBER(p[0])
 	@_("FNUMBER")
 	def primary_expression(self, p):
-		#return Variable(p[0])
-		pass
+		
+		return FNUMBER(p[0])
 	@_("CONST")
 	def primary_expression(self, p):
-		#return Variable(p[0])
-		pass
+		
+		return CONST(p[0])
 	@_("CHARACTER")
 	def primary_expression(self, p):
-		#return Variable(p[0])
-		pass
+		
+		return CHARACTER(p[0])
 	@_("string_literal")
 	def primary_expression(self, p):
-		#return p.string_literal
-		pass
+		return string_literal(p[0])
+		
 	@_("'(' expression ')'")
 	def primary_expression(self, p):
 		#return Trinary_V3(p.expression,p[0],p[2])
 		pass
+
 	@_("STRING")
 	def string_literal(self, p):
 		#return Variable(p[0])
 		pass
+
 	@_("string_literal STRING")
 	def string_literal(self, p):
 	#	return ConstDeclaration(p[1],p.string_literal)
@@ -289,90 +299,68 @@ class Parser(sly.Parser):
 		pass
 	@_("open_statement")
 	def statement(self, p):
-		return VarDeclaration(name='int', expr='cde', end=';', Ext=False) 
-		pass
+		return p.open_statement 
+		
 	@_("closed_statement")
 	def statement(self, p):
-		return VarDeclaration(name='int', expr='cde', end=';', Ext=False) 
-		pass
+		return p.closed_statement 
+		
 	@_("compound_statement")
 	def other_statement(self, p):
-	#	return p.compound_statement
-		pass
+		return p.compound_statement
+		
 	@_("expression_statement")
 	def other_statement(self, p):
-	#	return p.expression_statement
-		pass
+		return p.expression_statement
+		
 	@_("jumpstatement")
 	def other_statement(self, p):
 		#return p.jumpstatement
 		pass
-	@_("IF '(' expression ')' other_statement", 
-       "IF '(' expression ')' open_statement",
-	   "WHILE '(' expression ')' open_statement")
-	def open_statement(self, p):
-		#return Open_statement(p[0],p[1],p.expression,p[3],p[4]) 
-		pass
-#sin modificar
-#	@_("IF '(' expression ')' closed_statement ELSE open_statement")
-#	def open_statement(self, p):
-#		pass
 
-	@_("IF '(' expression ')' open")
+	@_("WHILE '(' expression ')' open_statement")
 	def open_statement(self, p):
-		#return Open_statement(p[0],p[1],p.expression,p[3],p.open)
-		pass
-	@_("closed_statement ELSE open_statement")
-	def open(self, p):
-	#	return Binary(p.closed_statement,p[1],p.open_statement)
-		pass
+		
+		return WhileStmt( p.expression, p.open_statement )
+    
+    
+	@_("WHILE '(' expression ')' closed_statement")
+	def closed_statement(self, p):
+		
+		return WhileStmt( p.expression, p.closed_statement )
+
+	@_("IF '(' expression ')' closed_statement ELSE open_statement")
+	def open_statement(self, p):
+		return IfStmt(p.expression, p.closed_statement, p.open_statement)
+
+	@_("IF '(' expression ')' closed_statement ELSE closed_statement")
+	def closed_statement(self, p):
+		return IfStmt(p.expression, p.closed_statement0, p.closed_statement1)
+
+	@_("IF '(' expression ')' open_statement")
+	def open_statement(self, p):
+		return IfStmt(p.expression, p.open_statement)
+    
+	@_("IF '(' expression ')' other_statement")
+	def open_statement(self, p):
+		return IfStmt(p.expression, p.other_statement)
+
 	
-#sin modificar
-	#@_("FOR '(' expression_statement expression_statement expression ')' open_statement")
-	#def open_statement(self, p):
-	#	pass
 
-	@_("FOR '(' for_cond ')' open_statement")
+	@_("FOR '(' expression_statement expression_statement expression ')' open_statement")
 	def open_statement(self, p):
-		#return Open_statement(p[0],p[1],p.for_cond,p[3],p.open_statement)
-		pass
+		return For( p.expression_statement0, p.expression_statement1, p.expression, p.open_statement )
 
-	@_("expression_statement double_expression")
-	def for_cond(self, p):
-		#return Binary_Nop(p.expression_statement,p.double_expression)
-		pass
-	@_("expression_statement expression")
-	def double_expression(self, p):
-		#return Binary_Nop(p.expression_statement,p.expression)
-		pass
-	
-# 
+	@_("FOR '(' expression_statement expression_statement expression ')' closed_statement")
+	def closed_statement(self, p):
+		return For( p.expression_statement0, p.expression_statement1, p.expression, p.closed_statement )
+
+
 	@_("other_statement")
 	def closed_statement(self, p):
-		#return p.other_statement
-		pass
-#modificada para ajustar el arbol@_("IF '(' expression ')' closed_statement ELSE closed_statement")
-	
-	@_("IF '(' expression ')' closed")
-	def closed_statement(self, p):
-		#return Open_statement(p[0],p[1],p.expression,p[3],p.closed)
-		pass
+		return p.other_statement
+		
 
-	@_("closed_statement ELSE closed_statement")
-	def closed(self, p):
-		#return Binary(p.closed_statement,p[1],p.closed_statement)
-		pass
-
-	@_( "WHILE '(' expression ')' closed_statement")
-	def closed_statement(self, p):
-		#return Open_statement(p[0],p[1],p.expression,p[3],p.closed_statement)
-		pass
-
-	@_(#modificada para match de for anterior
-       "FOR '(' for_cond ')' closed_statement")
-	def closed_statement(self, p):
-		#return Open_statement(p[0],p[1],p.for_cond,p[3],p.closed_statement)
-		pass
 
 
 	@_("statement")

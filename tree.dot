@@ -35,9 +35,35 @@ expr: abde"]
 type: int
 expr: abdf"]
 	n02 -> n09
-	n10 [label="Var declaraiton
-type: int
-expr: cde"]
+	n10 [label="Binary\nop:="]
+	n11 [label="ID=abc"]
+	n10 -> n11
+	n12 [label="INUMBER=1"]
+	n10 -> n12
 	n02 -> n10
+	n13 [label="For\cond: "]
+	n14 [label="Binary\nop:="]
+	n15 [label="ID=i"]
+	n14 -> n15
+	n16 [label="INUMBER=1"]
+	n14 -> n16
+	n13 -> n14
+	n17 [label="Binary\nop:<"]
+	n18 [label="ID=i"]
+	n17 -> n18
+	n19 [label="INUMBER=2"]
+	n17 -> n19
+	n13 -> n17
+	n20 [label="Binary\nop:+="]
+	n21 [label="ID=i"]
+	n20 -> n21
+	n22 [label="INUMBER=1"]
+	n20 -> n22
+	n13 -> n20
+	n23 [label="Var declaraiton
+type: int
+expr: holasoyfor"]
+	n13 -> n23
+	n02 -> n13
 	n01 -> n02
 }

@@ -88,30 +88,26 @@ Rule 84    statement -> open_statement
 Rule 85    other_statement -> jumpstatement
 Rule 86    other_statement -> expression_statement
 Rule 87    other_statement -> compound_statement
-Rule 88    open_statement -> FOR ( for_cond ) open_statement
-Rule 89    open_statement -> IF ( expression ) open
-Rule 90    open_statement -> WHILE ( expression ) open_statement
-Rule 91    open_statement -> IF ( expression ) open_statement
-Rule 92    open_statement -> IF ( expression ) other_statement
-Rule 93    open -> closed_statement ELSE open_statement
-Rule 94    for_cond -> expression_statement double_expression
-Rule 95    double_expression -> expression_statement expression
-Rule 96    closed_statement -> FOR ( for_cond ) closed_statement
-Rule 97    closed_statement -> WHILE ( expression ) closed_statement
-Rule 98    closed_statement -> IF ( expression ) closed
-Rule 99    closed_statement -> other_statement
-Rule 100   closed -> closed_statement ELSE closed_statement
-Rule 101   statement_list -> statement_list statement
-Rule 102   statement_list -> statement
-Rule 103   empty -> <empty>
+Rule 88    open_statement -> FOR ( expression_statement expression_statement expression ) open_statement
+Rule 89    open_statement -> IF ( expression ) other_statement
+Rule 90    open_statement -> IF ( expression ) open_statement
+Rule 91    open_statement -> IF ( expression ) closed_statement ELSE open_statement
+Rule 92    open_statement -> WHILE ( expression ) open_statement
+Rule 93    closed_statement -> other_statement
+Rule 94    closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement
+Rule 95    closed_statement -> IF ( expression ) closed_statement ELSE closed_statement
+Rule 96    closed_statement -> WHILE ( expression ) closed_statement
+Rule 97    statement_list -> statement_list statement
+Rule 98    statement_list -> statement
+Rule 99    empty -> <empty>
 
 Terminals, with rules where they appear:
 
 !                    : 59
 %                    : 63
 &                    : 57
-(                    : 20 21 52 53 70 88 89 90 91 92 96 97 98
-)                    : 20 21 52 53 70 88 89 90 91 92 96 97 98
+(                    : 20 21 52 53 70 88 89 90 91 92 94 95 96
+)                    : 20 21 52 53 70 88 89 90 91 92 94 95 96
 *                    : 18 58 65
 +                    : 60 68
 ,                    : 23 25 55
@@ -129,16 +125,16 @@ CONST                : 73
 CONTINUE             : 79
 DIVEQ                : 35
 ELLIPSIS             : 23
-ELSE                 : 93 100
+ELSE                 : 91 95
 EQ                   : 40
 EXTERN               : 8
 FLOAT                : 16
 FNUMBER              : 74
-FOR                  : 88 96
+FOR                  : 88 94
 GE                   : 42
 GT                   : 47
 ID                   : 22 76
-IF                   : 89 91 92 98
+IF                   : 89 90 91 95
 INT                  : 17
 INUMBER              : 75
 LAND                 : 43
@@ -153,7 +149,7 @@ STATIC               : 6
 STRING               : 77 78
 SUBEQ                : 33
 VOID                 : 14
-WHILE                : 90 97
+WHILE                : 92 96
 [                    : 51
 ]                    : 51
 error                : 
@@ -165,27 +161,23 @@ Nonterminals, with rules where they appear:
 additive_expression  : 42 43 44 45 46 47 48 49 50 67 68
 argument_expression_list : 53 55
 assigment_expression : 31
-closed               : 98
-closed_statement     : 83 93 96 97 100 100
+closed_statement     : 83 91 94 95 95 96
 compound_statement   : 6 7 87
 declaration          : 4 12 13
 declaration_list     : 10 12
 declaration_list_opt : 28 29
 declarator           : 6 7 8 9 18 27
 direct_declarator    : 19 20 21
-double_expression    : 94
 empty                : 11
 equality_expression  : 32 33 34 35 36 37 38 39 40
-expression           : 30 33 34 35 36 37 38 51 55 56 70 81 89 90 91 92 95 97 98
-expression_statement : 86 94 95
+expression           : 30 33 34 35 36 37 38 51 55 56 70 81 88 89 90 91 92 94 95 96
+expression_statement : 86 88 88 94 94
 external_declaration : 2 3
-for_cond             : 88 96
 function_definition  : 5
 jumpstatement        : 85
 mult_expression      : 63 64 65 67 68 69
-open                 : 89
-open_statement       : 84 88 90 91 93
-other_statement      : 92 99
+open_statement       : 84 88 90 91 92
+other_statement      : 89 93
 parameter_declaration : 25 26
 parameter_list       : 23 24 25
 parameter_type_list  : 21
@@ -193,8 +185,8 @@ postfix_expression   : 51 52 53 62
 primary_expression   : 54
 program              : 0
 relational_expression : 39 40 41 42 43 44 45 46 47 48 49
-statement            : 101 102
-statement_list       : 29 101
+statement            : 97 98
+statement_list       : 29 97
 string_literal       : 71 77
 translation_unit     : 1 2
 type_specifier       : 6 7 8 9 27
@@ -475,8 +467,8 @@ state 21
     $end            reduce using rule 9 (declaration -> type_specifier declarator ; .)
     }               reduce using rule 9 (declaration -> type_specifier declarator ; .)
     FOR             reduce using rule 9 (declaration -> type_specifier declarator ; .)
-    WHILE           reduce using rule 9 (declaration -> type_specifier declarator ; .)
     IF              reduce using rule 9 (declaration -> type_specifier declarator ; .)
+    WHILE           reduce using rule 9 (declaration -> type_specifier declarator ; .)
     CONTINUE        reduce using rule 9 (declaration -> type_specifier declarator ; .)
     BREAK           reduce using rule 9 (declaration -> type_specifier declarator ; .)
     RETURN          reduce using rule 9 (declaration -> type_specifier declarator ; .)
@@ -515,33 +507,33 @@ state 23
     (11) declaration_list_opt -> . empty
     (12) declaration_list -> . declaration_list declaration
     (13) declaration_list -> . declaration
-    (103) empty -> .
+    (99) empty -> .
     (8) declaration -> . EXTERN type_specifier declarator ;
     (9) declaration -> . type_specifier declarator ;
     (14) type_specifier -> . VOID
     (15) type_specifier -> . CHAR
     (16) type_specifier -> . FLOAT
     (17) type_specifier -> . INT
-    }               reduce using rule 103 (empty -> .)
-    FOR             reduce using rule 103 (empty -> .)
-    WHILE           reduce using rule 103 (empty -> .)
-    IF              reduce using rule 103 (empty -> .)
-    CONTINUE        reduce using rule 103 (empty -> .)
-    BREAK           reduce using rule 103 (empty -> .)
-    RETURN          reduce using rule 103 (empty -> .)
-    {               reduce using rule 103 (empty -> .)
-    &               reduce using rule 103 (empty -> .)
-    *               reduce using rule 103 (empty -> .)
-    !               reduce using rule 103 (empty -> .)
-    +               reduce using rule 103 (empty -> .)
-    -               reduce using rule 103 (empty -> .)
-    (               reduce using rule 103 (empty -> .)
-    CHARACTER       reduce using rule 103 (empty -> .)
-    CONST           reduce using rule 103 (empty -> .)
-    FNUMBER         reduce using rule 103 (empty -> .)
-    INUMBER         reduce using rule 103 (empty -> .)
-    ID              reduce using rule 103 (empty -> .)
-    STRING          reduce using rule 103 (empty -> .)
+    }               reduce using rule 99 (empty -> .)
+    FOR             reduce using rule 99 (empty -> .)
+    IF              reduce using rule 99 (empty -> .)
+    WHILE           reduce using rule 99 (empty -> .)
+    CONTINUE        reduce using rule 99 (empty -> .)
+    BREAK           reduce using rule 99 (empty -> .)
+    RETURN          reduce using rule 99 (empty -> .)
+    {               reduce using rule 99 (empty -> .)
+    &               reduce using rule 99 (empty -> .)
+    *               reduce using rule 99 (empty -> .)
+    !               reduce using rule 99 (empty -> .)
+    +               reduce using rule 99 (empty -> .)
+    -               reduce using rule 99 (empty -> .)
+    (               reduce using rule 99 (empty -> .)
+    CHARACTER       reduce using rule 99 (empty -> .)
+    CONST           reduce using rule 99 (empty -> .)
+    FNUMBER         reduce using rule 99 (empty -> .)
+    INUMBER         reduce using rule 99 (empty -> .)
+    ID              reduce using rule 99 (empty -> .)
+    STRING          reduce using rule 99 (empty -> .)
     EXTERN          shift and go to state 6
     VOID            shift and go to state 9
     CHAR            shift and go to state 10
@@ -608,8 +600,8 @@ state 27
     $end            reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     }               reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     FOR             reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
-    WHILE           reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     IF              reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
+    WHILE           reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     CONTINUE        reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     BREAK           reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
     RETURN          reduce using rule 8 (declaration -> EXTERN type_specifier declarator ; .)
@@ -632,19 +624,19 @@ state 28
 
     (28) compound_statement -> { declaration_list_opt . }
     (29) compound_statement -> { declaration_list_opt . statement_list }
-    (101) statement_list -> . statement_list statement
-    (102) statement_list -> . statement
+    (97) statement_list -> . statement_list statement
+    (98) statement_list -> . statement
     (83) statement -> . closed_statement
     (84) statement -> . open_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
     (85) other_statement -> . jumpstatement
     (86) other_statement -> . expression_statement
     (87) other_statement -> . compound_statement
@@ -702,9 +694,9 @@ state 28
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
     }               shift and go to state 39
-    FOR             shift and go to state 44
-    WHILE           shift and go to state 46
-    IF              shift and go to state 48
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
     CONTINUE        shift and go to state 53
     BREAK           shift and go to state 54
     RETURN          shift and go to state 55
@@ -714,7 +706,7 @@ state 28
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -726,10 +718,10 @@ state 28
     statement                      shift and go to state 41
     closed_statement               shift and go to state 42
     open_statement                 shift and go to state 43
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
+    other_statement                shift and go to state 44
+    expression_statement           shift and go to state 47
+    expression                     shift and go to state 48
+    jumpstatement                  shift and go to state 51
     compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
@@ -753,8 +745,8 @@ state 29
     (17) type_specifier -> . INT
     }               reduce using rule 10 (declaration_list_opt -> declaration_list .)
     FOR             reduce using rule 10 (declaration_list_opt -> declaration_list .)
-    WHILE           reduce using rule 10 (declaration_list_opt -> declaration_list .)
     IF              reduce using rule 10 (declaration_list_opt -> declaration_list .)
+    WHILE           reduce using rule 10 (declaration_list_opt -> declaration_list .)
     CONTINUE        reduce using rule 10 (declaration_list_opt -> declaration_list .)
     BREAK           reduce using rule 10 (declaration_list_opt -> declaration_list .)
     RETURN          reduce using rule 10 (declaration_list_opt -> declaration_list .)
@@ -785,8 +777,8 @@ state 30
     (11) declaration_list_opt -> empty .
     }               reduce using rule 11 (declaration_list_opt -> empty .)
     FOR             reduce using rule 11 (declaration_list_opt -> empty .)
-    WHILE           reduce using rule 11 (declaration_list_opt -> empty .)
     IF              reduce using rule 11 (declaration_list_opt -> empty .)
+    WHILE           reduce using rule 11 (declaration_list_opt -> empty .)
     CONTINUE        reduce using rule 11 (declaration_list_opt -> empty .)
     BREAK           reduce using rule 11 (declaration_list_opt -> empty .)
     RETURN          reduce using rule 11 (declaration_list_opt -> empty .)
@@ -815,8 +807,8 @@ state 31
     INT             reduce using rule 13 (declaration_list -> declaration .)
     }               reduce using rule 13 (declaration_list -> declaration .)
     FOR             reduce using rule 13 (declaration_list -> declaration .)
-    WHILE           reduce using rule 13 (declaration_list -> declaration .)
     IF              reduce using rule 13 (declaration_list -> declaration .)
+    WHILE           reduce using rule 13 (declaration_list -> declaration .)
     CONTINUE        reduce using rule 13 (declaration_list -> declaration .)
     BREAK           reduce using rule 13 (declaration_list -> declaration .)
     RETURN          reduce using rule 13 (declaration_list -> declaration .)
@@ -919,8 +911,8 @@ state 39
     $end            reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     }               reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     FOR             reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
-    WHILE           reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     IF              reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
+    WHILE           reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     CONTINUE        reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     BREAK           reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
     RETURN          reduce using rule 28 (compound_statement -> { declaration_list_opt } .)
@@ -943,18 +935,18 @@ state 39
 state 40
 
     (29) compound_statement -> { declaration_list_opt statement_list . }
-    (101) statement_list -> statement_list . statement
+    (97) statement_list -> statement_list . statement
     (83) statement -> . closed_statement
     (84) statement -> . open_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
     (85) other_statement -> . jumpstatement
     (86) other_statement -> . expression_statement
     (87) other_statement -> . compound_statement
@@ -1012,9 +1004,9 @@ state 40
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
     }               shift and go to state 81
-    FOR             shift and go to state 44
-    WHILE           shift and go to state 46
-    IF              shift and go to state 48
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
     CONTINUE        shift and go to state 53
     BREAK           shift and go to state 54
     RETURN          shift and go to state 55
@@ -1024,7 +1016,7 @@ state 40
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1035,10 +1027,10 @@ state 40
     statement                      shift and go to state 82
     closed_statement               shift and go to state 42
     open_statement                 shift and go to state 43
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
+    other_statement                shift and go to state 44
+    expression_statement           shift and go to state 47
+    expression                     shift and go to state 48
+    jumpstatement                  shift and go to state 51
     compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
@@ -1052,27 +1044,27 @@ state 40
 
 state 41
 
-    (102) statement_list -> statement .
-    }               reduce using rule 102 (statement_list -> statement .)
-    FOR             reduce using rule 102 (statement_list -> statement .)
-    WHILE           reduce using rule 102 (statement_list -> statement .)
-    IF              reduce using rule 102 (statement_list -> statement .)
-    CONTINUE        reduce using rule 102 (statement_list -> statement .)
-    BREAK           reduce using rule 102 (statement_list -> statement .)
-    RETURN          reduce using rule 102 (statement_list -> statement .)
-    {               reduce using rule 102 (statement_list -> statement .)
-    &               reduce using rule 102 (statement_list -> statement .)
-    *               reduce using rule 102 (statement_list -> statement .)
-    !               reduce using rule 102 (statement_list -> statement .)
-    +               reduce using rule 102 (statement_list -> statement .)
-    -               reduce using rule 102 (statement_list -> statement .)
-    (               reduce using rule 102 (statement_list -> statement .)
-    CHARACTER       reduce using rule 102 (statement_list -> statement .)
-    CONST           reduce using rule 102 (statement_list -> statement .)
-    FNUMBER         reduce using rule 102 (statement_list -> statement .)
-    INUMBER         reduce using rule 102 (statement_list -> statement .)
-    ID              reduce using rule 102 (statement_list -> statement .)
-    STRING          reduce using rule 102 (statement_list -> statement .)
+    (98) statement_list -> statement .
+    }               reduce using rule 98 (statement_list -> statement .)
+    FOR             reduce using rule 98 (statement_list -> statement .)
+    IF              reduce using rule 98 (statement_list -> statement .)
+    WHILE           reduce using rule 98 (statement_list -> statement .)
+    CONTINUE        reduce using rule 98 (statement_list -> statement .)
+    BREAK           reduce using rule 98 (statement_list -> statement .)
+    RETURN          reduce using rule 98 (statement_list -> statement .)
+    {               reduce using rule 98 (statement_list -> statement .)
+    &               reduce using rule 98 (statement_list -> statement .)
+    *               reduce using rule 98 (statement_list -> statement .)
+    !               reduce using rule 98 (statement_list -> statement .)
+    +               reduce using rule 98 (statement_list -> statement .)
+    -               reduce using rule 98 (statement_list -> statement .)
+    (               reduce using rule 98 (statement_list -> statement .)
+    CHARACTER       reduce using rule 98 (statement_list -> statement .)
+    CONST           reduce using rule 98 (statement_list -> statement .)
+    FNUMBER         reduce using rule 98 (statement_list -> statement .)
+    INUMBER         reduce using rule 98 (statement_list -> statement .)
+    ID              reduce using rule 98 (statement_list -> statement .)
+    STRING          reduce using rule 98 (statement_list -> statement .)
 
 
 state 42
@@ -1080,8 +1072,8 @@ state 42
     (83) statement -> closed_statement .
     }               reduce using rule 83 (statement -> closed_statement .)
     FOR             reduce using rule 83 (statement -> closed_statement .)
-    WHILE           reduce using rule 83 (statement -> closed_statement .)
     IF              reduce using rule 83 (statement -> closed_statement .)
+    WHILE           reduce using rule 83 (statement -> closed_statement .)
     CONTINUE        reduce using rule 83 (statement -> closed_statement .)
     BREAK           reduce using rule 83 (statement -> closed_statement .)
     RETURN          reduce using rule 83 (statement -> closed_statement .)
@@ -1105,8 +1097,8 @@ state 43
     (84) statement -> open_statement .
     }               reduce using rule 84 (statement -> open_statement .)
     FOR             reduce using rule 84 (statement -> open_statement .)
-    WHILE           reduce using rule 84 (statement -> open_statement .)
     IF              reduce using rule 84 (statement -> open_statement .)
+    WHILE           reduce using rule 84 (statement -> open_statement .)
     CONTINUE        reduce using rule 84 (statement -> open_statement .)
     BREAK           reduce using rule 84 (statement -> open_statement .)
     RETURN          reduce using rule 84 (statement -> open_statement .)
@@ -1127,12 +1119,38 @@ state 43
 
 state 44
 
-    (96) closed_statement -> FOR . ( for_cond ) closed_statement
-    (88) open_statement -> FOR . ( for_cond ) open_statement
-    (               shift and go to state 83
+    (93) closed_statement -> other_statement .
+    }               reduce using rule 93 (closed_statement -> other_statement .)
+    FOR             reduce using rule 93 (closed_statement -> other_statement .)
+    IF              reduce using rule 93 (closed_statement -> other_statement .)
+    WHILE           reduce using rule 93 (closed_statement -> other_statement .)
+    CONTINUE        reduce using rule 93 (closed_statement -> other_statement .)
+    BREAK           reduce using rule 93 (closed_statement -> other_statement .)
+    RETURN          reduce using rule 93 (closed_statement -> other_statement .)
+    {               reduce using rule 93 (closed_statement -> other_statement .)
+    &               reduce using rule 93 (closed_statement -> other_statement .)
+    *               reduce using rule 93 (closed_statement -> other_statement .)
+    !               reduce using rule 93 (closed_statement -> other_statement .)
+    +               reduce using rule 93 (closed_statement -> other_statement .)
+    -               reduce using rule 93 (closed_statement -> other_statement .)
+    (               reduce using rule 93 (closed_statement -> other_statement .)
+    CHARACTER       reduce using rule 93 (closed_statement -> other_statement .)
+    CONST           reduce using rule 93 (closed_statement -> other_statement .)
+    FNUMBER         reduce using rule 93 (closed_statement -> other_statement .)
+    INUMBER         reduce using rule 93 (closed_statement -> other_statement .)
+    ID              reduce using rule 93 (closed_statement -> other_statement .)
+    STRING          reduce using rule 93 (closed_statement -> other_statement .)
+    ELSE            reduce using rule 93 (closed_statement -> other_statement .)
 
 
 state 45
+
+    (94) closed_statement -> FOR . ( expression_statement expression_statement expression ) closed_statement
+    (88) open_statement -> FOR . ( expression_statement expression_statement expression ) open_statement
+    (               shift and go to state 83
+
+
+state 46
 
     (70) primary_expression -> ( . expression )
     (31) expression -> . assigment_expression
@@ -1186,7 +1204,7 @@ state 45
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1205,87 +1223,13 @@ state 45
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
 
-state 46
-
-    (97) closed_statement -> WHILE . ( expression ) closed_statement
-    (90) open_statement -> WHILE . ( expression ) open_statement
-    (               shift and go to state 85
-
-
 state 47
-
-    (30) expression_statement -> expression . ;
-    ;               shift and go to state 86
-
-
-state 48
-
-    (98) closed_statement -> IF . ( expression ) closed
-    (89) open_statement -> IF . ( expression ) open
-    (91) open_statement -> IF . ( expression ) open_statement
-    (92) open_statement -> IF . ( expression ) other_statement
-    (               shift and go to state 87
-
-
-state 49
-
-    (99) closed_statement -> other_statement .
-    }               reduce using rule 99 (closed_statement -> other_statement .)
-    FOR             reduce using rule 99 (closed_statement -> other_statement .)
-    WHILE           reduce using rule 99 (closed_statement -> other_statement .)
-    IF              reduce using rule 99 (closed_statement -> other_statement .)
-    CONTINUE        reduce using rule 99 (closed_statement -> other_statement .)
-    BREAK           reduce using rule 99 (closed_statement -> other_statement .)
-    RETURN          reduce using rule 99 (closed_statement -> other_statement .)
-    {               reduce using rule 99 (closed_statement -> other_statement .)
-    &               reduce using rule 99 (closed_statement -> other_statement .)
-    *               reduce using rule 99 (closed_statement -> other_statement .)
-    !               reduce using rule 99 (closed_statement -> other_statement .)
-    +               reduce using rule 99 (closed_statement -> other_statement .)
-    -               reduce using rule 99 (closed_statement -> other_statement .)
-    (               reduce using rule 99 (closed_statement -> other_statement .)
-    CHARACTER       reduce using rule 99 (closed_statement -> other_statement .)
-    CONST           reduce using rule 99 (closed_statement -> other_statement .)
-    FNUMBER         reduce using rule 99 (closed_statement -> other_statement .)
-    INUMBER         reduce using rule 99 (closed_statement -> other_statement .)
-    ID              reduce using rule 99 (closed_statement -> other_statement .)
-    STRING          reduce using rule 99 (closed_statement -> other_statement .)
-    ELSE            reduce using rule 99 (closed_statement -> other_statement .)
-
-
-state 50
-
-    (85) other_statement -> jumpstatement .
-    }               reduce using rule 85 (other_statement -> jumpstatement .)
-    FOR             reduce using rule 85 (other_statement -> jumpstatement .)
-    WHILE           reduce using rule 85 (other_statement -> jumpstatement .)
-    IF              reduce using rule 85 (other_statement -> jumpstatement .)
-    CONTINUE        reduce using rule 85 (other_statement -> jumpstatement .)
-    BREAK           reduce using rule 85 (other_statement -> jumpstatement .)
-    RETURN          reduce using rule 85 (other_statement -> jumpstatement .)
-    {               reduce using rule 85 (other_statement -> jumpstatement .)
-    &               reduce using rule 85 (other_statement -> jumpstatement .)
-    *               reduce using rule 85 (other_statement -> jumpstatement .)
-    !               reduce using rule 85 (other_statement -> jumpstatement .)
-    +               reduce using rule 85 (other_statement -> jumpstatement .)
-    -               reduce using rule 85 (other_statement -> jumpstatement .)
-    (               reduce using rule 85 (other_statement -> jumpstatement .)
-    CHARACTER       reduce using rule 85 (other_statement -> jumpstatement .)
-    CONST           reduce using rule 85 (other_statement -> jumpstatement .)
-    FNUMBER         reduce using rule 85 (other_statement -> jumpstatement .)
-    INUMBER         reduce using rule 85 (other_statement -> jumpstatement .)
-    ID              reduce using rule 85 (other_statement -> jumpstatement .)
-    STRING          reduce using rule 85 (other_statement -> jumpstatement .)
-    ELSE            reduce using rule 85 (other_statement -> jumpstatement .)
-
-
-state 51
 
     (86) other_statement -> expression_statement .
     }               reduce using rule 86 (other_statement -> expression_statement .)
     FOR             reduce using rule 86 (other_statement -> expression_statement .)
-    WHILE           reduce using rule 86 (other_statement -> expression_statement .)
     IF              reduce using rule 86 (other_statement -> expression_statement .)
+    WHILE           reduce using rule 86 (other_statement -> expression_statement .)
     CONTINUE        reduce using rule 86 (other_statement -> expression_statement .)
     BREAK           reduce using rule 86 (other_statement -> expression_statement .)
     RETURN          reduce using rule 86 (other_statement -> expression_statement .)
@@ -1305,13 +1249,61 @@ state 51
     ELSE            reduce using rule 86 (other_statement -> expression_statement .)
 
 
+state 48
+
+    (30) expression_statement -> expression . ;
+    ;               shift and go to state 85
+
+
+state 49
+
+    (95) closed_statement -> IF . ( expression ) closed_statement ELSE closed_statement
+    (89) open_statement -> IF . ( expression ) other_statement
+    (90) open_statement -> IF . ( expression ) open_statement
+    (91) open_statement -> IF . ( expression ) closed_statement ELSE open_statement
+    (               shift and go to state 86
+
+
+state 50
+
+    (96) closed_statement -> WHILE . ( expression ) closed_statement
+    (92) open_statement -> WHILE . ( expression ) open_statement
+    (               shift and go to state 87
+
+
+state 51
+
+    (85) other_statement -> jumpstatement .
+    }               reduce using rule 85 (other_statement -> jumpstatement .)
+    FOR             reduce using rule 85 (other_statement -> jumpstatement .)
+    IF              reduce using rule 85 (other_statement -> jumpstatement .)
+    WHILE           reduce using rule 85 (other_statement -> jumpstatement .)
+    CONTINUE        reduce using rule 85 (other_statement -> jumpstatement .)
+    BREAK           reduce using rule 85 (other_statement -> jumpstatement .)
+    RETURN          reduce using rule 85 (other_statement -> jumpstatement .)
+    {               reduce using rule 85 (other_statement -> jumpstatement .)
+    &               reduce using rule 85 (other_statement -> jumpstatement .)
+    *               reduce using rule 85 (other_statement -> jumpstatement .)
+    !               reduce using rule 85 (other_statement -> jumpstatement .)
+    +               reduce using rule 85 (other_statement -> jumpstatement .)
+    -               reduce using rule 85 (other_statement -> jumpstatement .)
+    (               reduce using rule 85 (other_statement -> jumpstatement .)
+    CHARACTER       reduce using rule 85 (other_statement -> jumpstatement .)
+    CONST           reduce using rule 85 (other_statement -> jumpstatement .)
+    FNUMBER         reduce using rule 85 (other_statement -> jumpstatement .)
+    INUMBER         reduce using rule 85 (other_statement -> jumpstatement .)
+    ID              reduce using rule 85 (other_statement -> jumpstatement .)
+    STRING          reduce using rule 85 (other_statement -> jumpstatement .)
+    ELSE            reduce using rule 85 (other_statement -> jumpstatement .)
+
+
 state 52
 
     (87) other_statement -> compound_statement .
     }               reduce using rule 87 (other_statement -> compound_statement .)
     FOR             reduce using rule 87 (other_statement -> compound_statement .)
-    WHILE           reduce using rule 87 (other_statement -> compound_statement .)
     IF              reduce using rule 87 (other_statement -> compound_statement .)
+    WHILE           reduce using rule 87 (other_statement -> compound_statement .)
     CONTINUE        reduce using rule 87 (other_statement -> compound_statement .)
     BREAK           reduce using rule 87 (other_statement -> compound_statement .)
     RETURN          reduce using rule 87 (other_statement -> compound_statement .)
@@ -1399,7 +1391,7 @@ state 55
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1541,7 +1533,7 @@ state 60
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1614,7 +1606,7 @@ state 62
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1684,7 +1676,7 @@ state 64
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1724,7 +1716,7 @@ state 65
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -1764,7 +1756,7 @@ state 66
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2081,8 +2073,8 @@ state 76
     INT             reduce using rule 12 (declaration_list -> declaration_list declaration .)
     }               reduce using rule 12 (declaration_list -> declaration_list declaration .)
     FOR             reduce using rule 12 (declaration_list -> declaration_list declaration .)
-    WHILE           reduce using rule 12 (declaration_list -> declaration_list declaration .)
     IF              reduce using rule 12 (declaration_list -> declaration_list declaration .)
+    WHILE           reduce using rule 12 (declaration_list -> declaration_list declaration .)
     CONTINUE        reduce using rule 12 (declaration_list -> declaration_list declaration .)
     BREAK           reduce using rule 12 (declaration_list -> declaration_list declaration .)
     RETURN          reduce using rule 12 (declaration_list -> declaration_list declaration .)
@@ -2154,8 +2146,8 @@ state 81
     $end            reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     }               reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     FOR             reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
-    WHILE           reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     IF              reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
+    WHILE           reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     CONTINUE        reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     BREAK           reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
     RETURN          reduce using rule 29 (compound_statement -> { declaration_list_opt statement_list } .)
@@ -2177,34 +2169,33 @@ state 81
 
 state 82
 
-    (101) statement_list -> statement_list statement .
-    }               reduce using rule 101 (statement_list -> statement_list statement .)
-    FOR             reduce using rule 101 (statement_list -> statement_list statement .)
-    WHILE           reduce using rule 101 (statement_list -> statement_list statement .)
-    IF              reduce using rule 101 (statement_list -> statement_list statement .)
-    CONTINUE        reduce using rule 101 (statement_list -> statement_list statement .)
-    BREAK           reduce using rule 101 (statement_list -> statement_list statement .)
-    RETURN          reduce using rule 101 (statement_list -> statement_list statement .)
-    {               reduce using rule 101 (statement_list -> statement_list statement .)
-    &               reduce using rule 101 (statement_list -> statement_list statement .)
-    *               reduce using rule 101 (statement_list -> statement_list statement .)
-    !               reduce using rule 101 (statement_list -> statement_list statement .)
-    +               reduce using rule 101 (statement_list -> statement_list statement .)
-    -               reduce using rule 101 (statement_list -> statement_list statement .)
-    (               reduce using rule 101 (statement_list -> statement_list statement .)
-    CHARACTER       reduce using rule 101 (statement_list -> statement_list statement .)
-    CONST           reduce using rule 101 (statement_list -> statement_list statement .)
-    FNUMBER         reduce using rule 101 (statement_list -> statement_list statement .)
-    INUMBER         reduce using rule 101 (statement_list -> statement_list statement .)
-    ID              reduce using rule 101 (statement_list -> statement_list statement .)
-    STRING          reduce using rule 101 (statement_list -> statement_list statement .)
+    (97) statement_list -> statement_list statement .
+    }               reduce using rule 97 (statement_list -> statement_list statement .)
+    FOR             reduce using rule 97 (statement_list -> statement_list statement .)
+    IF              reduce using rule 97 (statement_list -> statement_list statement .)
+    WHILE           reduce using rule 97 (statement_list -> statement_list statement .)
+    CONTINUE        reduce using rule 97 (statement_list -> statement_list statement .)
+    BREAK           reduce using rule 97 (statement_list -> statement_list statement .)
+    RETURN          reduce using rule 97 (statement_list -> statement_list statement .)
+    {               reduce using rule 97 (statement_list -> statement_list statement .)
+    &               reduce using rule 97 (statement_list -> statement_list statement .)
+    *               reduce using rule 97 (statement_list -> statement_list statement .)
+    !               reduce using rule 97 (statement_list -> statement_list statement .)
+    +               reduce using rule 97 (statement_list -> statement_list statement .)
+    -               reduce using rule 97 (statement_list -> statement_list statement .)
+    (               reduce using rule 97 (statement_list -> statement_list statement .)
+    CHARACTER       reduce using rule 97 (statement_list -> statement_list statement .)
+    CONST           reduce using rule 97 (statement_list -> statement_list statement .)
+    FNUMBER         reduce using rule 97 (statement_list -> statement_list statement .)
+    INUMBER         reduce using rule 97 (statement_list -> statement_list statement .)
+    ID              reduce using rule 97 (statement_list -> statement_list statement .)
+    STRING          reduce using rule 97 (statement_list -> statement_list statement .)
 
 
 state 83
 
-    (96) closed_statement -> FOR ( . for_cond ) closed_statement
-    (88) open_statement -> FOR ( . for_cond ) open_statement
-    (94) for_cond -> . expression_statement double_expression
+    (94) closed_statement -> FOR ( . expression_statement expression_statement expression ) closed_statement
+    (88) open_statement -> FOR ( . expression_statement expression_statement expression ) open_statement
     (30) expression_statement -> . expression ;
     (31) expression -> . assigment_expression
     (32) expression -> . equality_expression
@@ -2257,7 +2248,7 @@ state 83
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2265,9 +2256,8 @@ state 83
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    for_cond                       shift and go to state 123
-    expression_statement           shift and go to state 124
-    expression                     shift and go to state 47
+    expression_statement           shift and go to state 123
+    expression                     shift and go to state 48
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -2281,90 +2271,16 @@ state 83
 state 84
 
     (70) primary_expression -> ( expression . )
-    )               shift and go to state 125
+    )               shift and go to state 124
 
 
 state 85
 
-    (97) closed_statement -> WHILE ( . expression ) closed_statement
-    (90) open_statement -> WHILE ( . expression ) open_statement
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 126
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 86
-
     (30) expression_statement -> expression ; .
     }               reduce using rule 30 (expression_statement -> expression ; .)
     FOR             reduce using rule 30 (expression_statement -> expression ; .)
-    WHILE           reduce using rule 30 (expression_statement -> expression ; .)
     IF              reduce using rule 30 (expression_statement -> expression ; .)
+    WHILE           reduce using rule 30 (expression_statement -> expression ; .)
     CONTINUE        reduce using rule 30 (expression_statement -> expression ; .)
     BREAK           reduce using rule 30 (expression_statement -> expression ; .)
     RETURN          reduce using rule 30 (expression_statement -> expression ; .)
@@ -2384,12 +2300,12 @@ state 86
     ELSE            reduce using rule 30 (expression_statement -> expression ; .)
 
 
-state 87
+state 86
 
-    (98) closed_statement -> IF ( . expression ) closed
-    (89) open_statement -> IF ( . expression ) open
-    (91) open_statement -> IF ( . expression ) open_statement
-    (92) open_statement -> IF ( . expression ) other_statement
+    (95) closed_statement -> IF ( . expression ) closed_statement ELSE closed_statement
+    (89) open_statement -> IF ( . expression ) other_statement
+    (90) open_statement -> IF ( . expression ) open_statement
+    (91) open_statement -> IF ( . expression ) closed_statement ELSE open_statement
     (31) expression -> . assigment_expression
     (32) expression -> . equality_expression
     (33) assigment_expression -> . equality_expression SUBEQ expression
@@ -2441,7 +2357,7 @@ state 87
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2449,7 +2365,81 @@ state 87
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    expression                     shift and go to state 127
+    expression                     shift and go to state 125
+    assigment_expression           shift and go to state 56
+    equality_expression            shift and go to state 57
+    relational_expression          shift and go to state 58
+    additive_expression            shift and go to state 59
+    mult_expression                shift and go to state 61
+    unary_expression               shift and go to state 63
+    postfix_expression             shift and go to state 67
+    primary_expression             shift and go to state 68
+    string_literal                 shift and go to state 69
+
+state 87
+
+    (96) closed_statement -> WHILE ( . expression ) closed_statement
+    (92) open_statement -> WHILE ( . expression ) open_statement
+    (31) expression -> . assigment_expression
+    (32) expression -> . equality_expression
+    (33) assigment_expression -> . equality_expression SUBEQ expression
+    (34) assigment_expression -> . equality_expression MULEQ expression
+    (35) assigment_expression -> . equality_expression DIVEQ expression
+    (36) assigment_expression -> . equality_expression MODEQ expression
+    (37) assigment_expression -> . equality_expression ADDEQ expression
+    (38) assigment_expression -> . equality_expression = expression
+    (39) equality_expression -> . equality_expression NE relational_expression
+    (40) equality_expression -> . equality_expression EQ relational_expression
+    (41) equality_expression -> . relational_expression
+    (42) relational_expression -> . relational_expression GE additive_expression
+    (43) relational_expression -> . relational_expression LAND additive_expression
+    (44) relational_expression -> . relational_expression LOR additive_expression
+    (45) relational_expression -> . relational_expression > additive_expression
+    (46) relational_expression -> . relational_expression LE additive_expression
+    (47) relational_expression -> . relational_expression GT additive_expression
+    (48) relational_expression -> . relational_expression LT additive_expression
+    (49) relational_expression -> . relational_expression < additive_expression
+    (50) relational_expression -> . additive_expression
+    (67) additive_expression -> . additive_expression - mult_expression
+    (68) additive_expression -> . additive_expression + mult_expression
+    (69) additive_expression -> . mult_expression
+    (63) mult_expression -> . mult_expression % unary_expression
+    (64) mult_expression -> . mult_expression / unary_expression
+    (65) mult_expression -> . mult_expression * unary_expression
+    (66) mult_expression -> . unary_expression
+    (57) unary_expression -> . & unary_expression
+    (58) unary_expression -> . * unary_expression
+    (59) unary_expression -> . ! unary_expression
+    (60) unary_expression -> . + unary_expression
+    (61) unary_expression -> . - unary_expression
+    (62) unary_expression -> . postfix_expression
+    (51) postfix_expression -> . postfix_expression [ expression ]
+    (52) postfix_expression -> . postfix_expression ( )
+    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
+    (54) postfix_expression -> . primary_expression
+    (70) primary_expression -> . ( expression )
+    (71) primary_expression -> . string_literal
+    (72) primary_expression -> . CHARACTER
+    (73) primary_expression -> . CONST
+    (74) primary_expression -> . FNUMBER
+    (75) primary_expression -> . INUMBER
+    (76) primary_expression -> . ID
+    (77) string_literal -> . string_literal STRING
+    (78) string_literal -> . STRING
+    &               shift and go to state 65
+    *               shift and go to state 64
+    !               shift and go to state 66
+    +               shift and go to state 62
+    -               shift and go to state 60
+    (               shift and go to state 46
+    CHARACTER       shift and go to state 70
+    CONST           shift and go to state 71
+    FNUMBER         shift and go to state 72
+    INUMBER         shift and go to state 73
+    ID              shift and go to state 74
+    STRING          shift and go to state 75
+
+    expression                     shift and go to state 126
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -2465,8 +2455,8 @@ state 88
     (79) jumpstatement -> CONTINUE ; .
     }               reduce using rule 79 (jumpstatement -> CONTINUE ; .)
     FOR             reduce using rule 79 (jumpstatement -> CONTINUE ; .)
-    WHILE           reduce using rule 79 (jumpstatement -> CONTINUE ; .)
     IF              reduce using rule 79 (jumpstatement -> CONTINUE ; .)
+    WHILE           reduce using rule 79 (jumpstatement -> CONTINUE ; .)
     CONTINUE        reduce using rule 79 (jumpstatement -> CONTINUE ; .)
     BREAK           reduce using rule 79 (jumpstatement -> CONTINUE ; .)
     RETURN          reduce using rule 79 (jumpstatement -> CONTINUE ; .)
@@ -2491,8 +2481,8 @@ state 89
     (80) jumpstatement -> BREAK ; .
     }               reduce using rule 80 (jumpstatement -> BREAK ; .)
     FOR             reduce using rule 80 (jumpstatement -> BREAK ; .)
-    WHILE           reduce using rule 80 (jumpstatement -> BREAK ; .)
     IF              reduce using rule 80 (jumpstatement -> BREAK ; .)
+    WHILE           reduce using rule 80 (jumpstatement -> BREAK ; .)
     CONTINUE        reduce using rule 80 (jumpstatement -> BREAK ; .)
     BREAK           reduce using rule 80 (jumpstatement -> BREAK ; .)
     RETURN          reduce using rule 80 (jumpstatement -> BREAK ; .)
@@ -2515,7 +2505,7 @@ state 89
 state 90
 
     (81) jumpstatement -> RETURN expression . ;
-    ;               shift and go to state 128
+    ;               shift and go to state 127
 
 
 state 91
@@ -2523,8 +2513,8 @@ state 91
     (82) jumpstatement -> RETURN ; .
     }               reduce using rule 82 (jumpstatement -> RETURN ; .)
     FOR             reduce using rule 82 (jumpstatement -> RETURN ; .)
-    WHILE           reduce using rule 82 (jumpstatement -> RETURN ; .)
     IF              reduce using rule 82 (jumpstatement -> RETURN ; .)
+    WHILE           reduce using rule 82 (jumpstatement -> RETURN ; .)
     CONTINUE        reduce using rule 82 (jumpstatement -> RETURN ; .)
     BREAK           reduce using rule 82 (jumpstatement -> RETURN ; .)
     RETURN          reduce using rule 82 (jumpstatement -> RETURN ; .)
@@ -2598,7 +2588,7 @@ state 92
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2607,7 +2597,7 @@ state 92
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 129
+    expression                     shift and go to state 128
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -2671,7 +2661,7 @@ state 93
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2680,7 +2670,7 @@ state 93
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 130
+    expression                     shift and go to state 129
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -2744,7 +2734,7 @@ state 94
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2753,7 +2743,7 @@ state 94
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 131
+    expression                     shift and go to state 130
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -2817,7 +2807,7 @@ state 95
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2826,7 +2816,7 @@ state 95
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 132
+    expression                     shift and go to state 131
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -2890,7 +2880,7 @@ state 96
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2899,7 +2889,7 @@ state 96
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 133
+    expression                     shift and go to state 132
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -2963,7 +2953,7 @@ state 97
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -2972,7 +2962,7 @@ state 97
     STRING          shift and go to state 75
 
     equality_expression            shift and go to state 57
-    expression                     shift and go to state 134
+    expression                     shift and go to state 133
     assigment_expression           shift and go to state 56
     relational_expression          shift and go to state 58
     additive_expression            shift and go to state 59
@@ -3025,7 +3015,7 @@ state 98
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3033,7 +3023,7 @@ state 98
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    relational_expression          shift and go to state 135
+    relational_expression          shift and go to state 134
     additive_expression            shift and go to state 59
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
@@ -3084,7 +3074,7 @@ state 99
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3092,7 +3082,7 @@ state 99
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    relational_expression          shift and go to state 136
+    relational_expression          shift and go to state 135
     additive_expression            shift and go to state 59
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
@@ -3134,7 +3124,7 @@ state 100
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3142,7 +3132,7 @@ state 100
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 137
+    additive_expression            shift and go to state 136
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3183,7 +3173,7 @@ state 101
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3191,7 +3181,7 @@ state 101
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 138
+    additive_expression            shift and go to state 137
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3232,7 +3222,7 @@ state 102
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3240,7 +3230,7 @@ state 102
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 139
+    additive_expression            shift and go to state 138
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3281,7 +3271,7 @@ state 103
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3289,7 +3279,7 @@ state 103
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 140
+    additive_expression            shift and go to state 139
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3330,7 +3320,7 @@ state 104
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3338,7 +3328,7 @@ state 104
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 141
+    additive_expression            shift and go to state 140
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3379,7 +3369,7 @@ state 105
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3387,7 +3377,7 @@ state 105
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 142
+    additive_expression            shift and go to state 141
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3428,7 +3418,7 @@ state 106
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3436,7 +3426,7 @@ state 106
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 143
+    additive_expression            shift and go to state 142
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3477,7 +3467,7 @@ state 107
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3485,7 +3475,7 @@ state 107
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    additive_expression            shift and go to state 144
+    additive_expression            shift and go to state 143
     mult_expression                shift and go to state 61
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
@@ -3523,7 +3513,7 @@ state 108
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3531,7 +3521,7 @@ state 108
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    mult_expression                shift and go to state 145
+    mult_expression                shift and go to state 144
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
     primary_expression             shift and go to state 68
@@ -3568,7 +3558,7 @@ state 109
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3576,7 +3566,7 @@ state 109
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    mult_expression                shift and go to state 146
+    mult_expression                shift and go to state 145
     unary_expression               shift and go to state 63
     postfix_expression             shift and go to state 67
     primary_expression             shift and go to state 68
@@ -3639,7 +3629,7 @@ state 111
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3647,7 +3637,7 @@ state 111
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    unary_expression               shift and go to state 147
+    unary_expression               shift and go to state 146
     postfix_expression             shift and go to state 67
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
@@ -3679,7 +3669,7 @@ state 112
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3687,7 +3677,7 @@ state 112
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    unary_expression               shift and go to state 148
+    unary_expression               shift and go to state 147
     postfix_expression             shift and go to state 67
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
@@ -3719,7 +3709,7 @@ state 113
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3727,7 +3717,7 @@ state 113
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    unary_expression               shift and go to state 149
+    unary_expression               shift and go to state 148
     postfix_expression             shift and go to state 67
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
@@ -3906,7 +3896,7 @@ state 118
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3915,7 +3905,7 @@ state 118
     STRING          shift and go to state 75
 
     postfix_expression             shift and go to state 67
-    expression                     shift and go to state 150
+    expression                     shift and go to state 149
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -3977,13 +3967,13 @@ state 119
     (76) primary_expression -> . ID
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
-    )               shift and go to state 151
+    )               shift and go to state 150
     &               shift and go to state 65
     *               shift and go to state 64
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -3992,8 +3982,8 @@ state 119
     STRING          shift and go to state 75
 
     postfix_expression             shift and go to state 67
-    argument_expression_list       shift and go to state 152
-    expression                     shift and go to state 153
+    argument_expression_list       shift and go to state 151
+    expression                     shift and go to state 152
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -4051,15 +4041,8 @@ state 122
 
 state 123
 
-    (96) closed_statement -> FOR ( for_cond . ) closed_statement
-    (88) open_statement -> FOR ( for_cond . ) open_statement
-    )               shift and go to state 154
-
-
-state 124
-
-    (94) for_cond -> expression_statement . double_expression
-    (95) double_expression -> . expression_statement expression
+    (94) closed_statement -> FOR ( expression_statement . expression_statement expression ) closed_statement
+    (88) open_statement -> FOR ( expression_statement . expression_statement expression ) open_statement
     (30) expression_statement -> . expression ;
     (31) expression -> . assigment_expression
     (32) expression -> . equality_expression
@@ -4112,7 +4095,7 @@ state 124
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -4120,9 +4103,8 @@ state 124
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    expression_statement           shift and go to state 155
-    double_expression              shift and go to state 156
-    expression                     shift and go to state 47
+    expression_statement           shift and go to state 153
+    expression                     shift and go to state 48
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -4133,7 +4115,7 @@ state 124
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
 
-state 125
+state 124
 
     (70) primary_expression -> ( expression ) .
     [               reduce using rule 70 (primary_expression -> ( expression ) .)
@@ -4165,29 +4147,29 @@ state 125
     ,               reduce using rule 70 (primary_expression -> ( expression ) .)
 
 
+state 125
+
+    (95) closed_statement -> IF ( expression . ) closed_statement ELSE closed_statement
+    (89) open_statement -> IF ( expression . ) other_statement
+    (90) open_statement -> IF ( expression . ) open_statement
+    (91) open_statement -> IF ( expression . ) closed_statement ELSE open_statement
+    )               shift and go to state 154
+
+
 state 126
 
-    (97) closed_statement -> WHILE ( expression . ) closed_statement
-    (90) open_statement -> WHILE ( expression . ) open_statement
-    )               shift and go to state 157
+    (96) closed_statement -> WHILE ( expression . ) closed_statement
+    (92) open_statement -> WHILE ( expression . ) open_statement
+    )               shift and go to state 155
 
 
 state 127
 
-    (98) closed_statement -> IF ( expression . ) closed
-    (89) open_statement -> IF ( expression . ) open
-    (91) open_statement -> IF ( expression . ) open_statement
-    (92) open_statement -> IF ( expression . ) other_statement
-    )               shift and go to state 158
-
-
-state 128
-
     (81) jumpstatement -> RETURN expression ; .
     }               reduce using rule 81 (jumpstatement -> RETURN expression ; .)
     FOR             reduce using rule 81 (jumpstatement -> RETURN expression ; .)
-    WHILE           reduce using rule 81 (jumpstatement -> RETURN expression ; .)
     IF              reduce using rule 81 (jumpstatement -> RETURN expression ; .)
+    WHILE           reduce using rule 81 (jumpstatement -> RETURN expression ; .)
     CONTINUE        reduce using rule 81 (jumpstatement -> RETURN expression ; .)
     BREAK           reduce using rule 81 (jumpstatement -> RETURN expression ; .)
     RETURN          reduce using rule 81 (jumpstatement -> RETURN expression ; .)
@@ -4207,7 +4189,7 @@ state 128
     ELSE            reduce using rule 81 (jumpstatement -> RETURN expression ; .)
 
 
-state 129
+state 128
 
     (33) assigment_expression -> equality_expression SUBEQ expression .
     ;               reduce using rule 33 (assigment_expression -> equality_expression SUBEQ expression .)
@@ -4216,7 +4198,7 @@ state 129
     ,               reduce using rule 33 (assigment_expression -> equality_expression SUBEQ expression .)
 
 
-state 130
+state 129
 
     (34) assigment_expression -> equality_expression MULEQ expression .
     ;               reduce using rule 34 (assigment_expression -> equality_expression MULEQ expression .)
@@ -4225,7 +4207,7 @@ state 130
     ,               reduce using rule 34 (assigment_expression -> equality_expression MULEQ expression .)
 
 
-state 131
+state 130
 
     (35) assigment_expression -> equality_expression DIVEQ expression .
     ;               reduce using rule 35 (assigment_expression -> equality_expression DIVEQ expression .)
@@ -4234,7 +4216,7 @@ state 131
     ,               reduce using rule 35 (assigment_expression -> equality_expression DIVEQ expression .)
 
 
-state 132
+state 131
 
     (36) assigment_expression -> equality_expression MODEQ expression .
     ;               reduce using rule 36 (assigment_expression -> equality_expression MODEQ expression .)
@@ -4243,7 +4225,7 @@ state 132
     ,               reduce using rule 36 (assigment_expression -> equality_expression MODEQ expression .)
 
 
-state 133
+state 132
 
     (37) assigment_expression -> equality_expression ADDEQ expression .
     ;               reduce using rule 37 (assigment_expression -> equality_expression ADDEQ expression .)
@@ -4252,7 +4234,7 @@ state 133
     ,               reduce using rule 37 (assigment_expression -> equality_expression ADDEQ expression .)
 
 
-state 134
+state 133
 
     (38) assigment_expression -> equality_expression = expression .
     ;               reduce using rule 38 (assigment_expression -> equality_expression = expression .)
@@ -4261,7 +4243,7 @@ state 134
     ,               reduce using rule 38 (assigment_expression -> equality_expression = expression .)
 
 
-state 135
+state 134
 
     (39) equality_expression -> equality_expression NE relational_expression .
     (42) relational_expression -> relational_expression . GE additive_expression
@@ -4294,7 +4276,7 @@ state 135
     <               shift and go to state 107
 
 
-state 136
+state 135
 
     (40) equality_expression -> equality_expression EQ relational_expression .
     (42) relational_expression -> relational_expression . GE additive_expression
@@ -4327,7 +4309,7 @@ state 136
     <               shift and go to state 107
 
 
-state 137
+state 136
 
     (42) relational_expression -> relational_expression GE additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4356,7 +4338,7 @@ state 137
     +               shift and go to state 109
 
 
-state 138
+state 137
 
     (43) relational_expression -> relational_expression LAND additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4385,7 +4367,7 @@ state 138
     +               shift and go to state 109
 
 
-state 139
+state 138
 
     (44) relational_expression -> relational_expression LOR additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4414,7 +4396,7 @@ state 139
     +               shift and go to state 109
 
 
-state 140
+state 139
 
     (45) relational_expression -> relational_expression > additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4443,7 +4425,7 @@ state 140
     +               shift and go to state 109
 
 
-state 141
+state 140
 
     (46) relational_expression -> relational_expression LE additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4472,7 +4454,7 @@ state 141
     +               shift and go to state 109
 
 
-state 142
+state 141
 
     (47) relational_expression -> relational_expression GT additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4501,7 +4483,7 @@ state 142
     +               shift and go to state 109
 
 
-state 143
+state 142
 
     (48) relational_expression -> relational_expression LT additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4530,7 +4512,7 @@ state 143
     +               shift and go to state 109
 
 
-state 144
+state 143
 
     (49) relational_expression -> relational_expression < additive_expression .
     (67) additive_expression -> additive_expression . - mult_expression
@@ -4559,7 +4541,7 @@ state 144
     +               shift and go to state 109
 
 
-state 145
+state 144
 
     (67) additive_expression -> additive_expression - mult_expression .
     (63) mult_expression -> mult_expression . % unary_expression
@@ -4592,7 +4574,7 @@ state 145
     *               shift and go to state 113
 
 
-state 146
+state 145
 
     (68) additive_expression -> additive_expression + mult_expression .
     (63) mult_expression -> mult_expression . % unary_expression
@@ -4625,7 +4607,7 @@ state 146
     *               shift and go to state 113
 
 
-state 147
+state 146
 
     (63) mult_expression -> mult_expression % unary_expression .
     %               reduce using rule 63 (mult_expression -> mult_expression % unary_expression .)
@@ -4655,7 +4637,7 @@ state 147
     ,               reduce using rule 63 (mult_expression -> mult_expression % unary_expression .)
 
 
-state 148
+state 147
 
     (64) mult_expression -> mult_expression / unary_expression .
     %               reduce using rule 64 (mult_expression -> mult_expression / unary_expression .)
@@ -4685,7 +4667,7 @@ state 148
     ,               reduce using rule 64 (mult_expression -> mult_expression / unary_expression .)
 
 
-state 149
+state 148
 
     (65) mult_expression -> mult_expression * unary_expression .
     %               reduce using rule 65 (mult_expression -> mult_expression * unary_expression .)
@@ -4715,13 +4697,13 @@ state 149
     ,               reduce using rule 65 (mult_expression -> mult_expression * unary_expression .)
 
 
-state 150
+state 149
 
     (51) postfix_expression -> postfix_expression [ expression . ]
-    ]               shift and go to state 159
+    ]               shift and go to state 156
 
 
-state 151
+state 150
 
     (52) postfix_expression -> postfix_expression ( ) .
     [               reduce using rule 52 (postfix_expression -> postfix_expression ( ) .)
@@ -4753,37 +4735,113 @@ state 151
     ,               reduce using rule 52 (postfix_expression -> postfix_expression ( ) .)
 
 
-state 152
+state 151
 
     (53) postfix_expression -> postfix_expression ( argument_expression_list . )
     (55) argument_expression_list -> argument_expression_list . , expression
-    )               shift and go to state 160
-    ,               shift and go to state 161
+    )               shift and go to state 157
+    ,               shift and go to state 158
 
 
-state 153
+state 152
 
     (56) argument_expression_list -> expression .
     )               reduce using rule 56 (argument_expression_list -> expression .)
     ,               reduce using rule 56 (argument_expression_list -> expression .)
 
 
+state 153
+
+    (94) closed_statement -> FOR ( expression_statement expression_statement . expression ) closed_statement
+    (88) open_statement -> FOR ( expression_statement expression_statement . expression ) open_statement
+    (31) expression -> . assigment_expression
+    (32) expression -> . equality_expression
+    (33) assigment_expression -> . equality_expression SUBEQ expression
+    (34) assigment_expression -> . equality_expression MULEQ expression
+    (35) assigment_expression -> . equality_expression DIVEQ expression
+    (36) assigment_expression -> . equality_expression MODEQ expression
+    (37) assigment_expression -> . equality_expression ADDEQ expression
+    (38) assigment_expression -> . equality_expression = expression
+    (39) equality_expression -> . equality_expression NE relational_expression
+    (40) equality_expression -> . equality_expression EQ relational_expression
+    (41) equality_expression -> . relational_expression
+    (42) relational_expression -> . relational_expression GE additive_expression
+    (43) relational_expression -> . relational_expression LAND additive_expression
+    (44) relational_expression -> . relational_expression LOR additive_expression
+    (45) relational_expression -> . relational_expression > additive_expression
+    (46) relational_expression -> . relational_expression LE additive_expression
+    (47) relational_expression -> . relational_expression GT additive_expression
+    (48) relational_expression -> . relational_expression LT additive_expression
+    (49) relational_expression -> . relational_expression < additive_expression
+    (50) relational_expression -> . additive_expression
+    (67) additive_expression -> . additive_expression - mult_expression
+    (68) additive_expression -> . additive_expression + mult_expression
+    (69) additive_expression -> . mult_expression
+    (63) mult_expression -> . mult_expression % unary_expression
+    (64) mult_expression -> . mult_expression / unary_expression
+    (65) mult_expression -> . mult_expression * unary_expression
+    (66) mult_expression -> . unary_expression
+    (57) unary_expression -> . & unary_expression
+    (58) unary_expression -> . * unary_expression
+    (59) unary_expression -> . ! unary_expression
+    (60) unary_expression -> . + unary_expression
+    (61) unary_expression -> . - unary_expression
+    (62) unary_expression -> . postfix_expression
+    (51) postfix_expression -> . postfix_expression [ expression ]
+    (52) postfix_expression -> . postfix_expression ( )
+    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
+    (54) postfix_expression -> . primary_expression
+    (70) primary_expression -> . ( expression )
+    (71) primary_expression -> . string_literal
+    (72) primary_expression -> . CHARACTER
+    (73) primary_expression -> . CONST
+    (74) primary_expression -> . FNUMBER
+    (75) primary_expression -> . INUMBER
+    (76) primary_expression -> . ID
+    (77) string_literal -> . string_literal STRING
+    (78) string_literal -> . STRING
+    &               shift and go to state 65
+    *               shift and go to state 64
+    !               shift and go to state 66
+    +               shift and go to state 62
+    -               shift and go to state 60
+    (               shift and go to state 46
+    CHARACTER       shift and go to state 70
+    CONST           shift and go to state 71
+    FNUMBER         shift and go to state 72
+    INUMBER         shift and go to state 73
+    ID              shift and go to state 74
+    STRING          shift and go to state 75
+
+    expression                     shift and go to state 159
+    assigment_expression           shift and go to state 56
+    equality_expression            shift and go to state 57
+    relational_expression          shift and go to state 58
+    additive_expression            shift and go to state 59
+    mult_expression                shift and go to state 61
+    unary_expression               shift and go to state 63
+    postfix_expression             shift and go to state 67
+    primary_expression             shift and go to state 68
+    string_literal                 shift and go to state 69
+
 state 154
 
-    (96) closed_statement -> FOR ( for_cond ) . closed_statement
-    (88) open_statement -> FOR ( for_cond ) . open_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
+    (95) closed_statement -> IF ( expression ) . closed_statement ELSE closed_statement
+    (89) open_statement -> IF ( expression ) . other_statement
+    (90) open_statement -> IF ( expression ) . open_statement
+    (91) open_statement -> IF ( expression ) . closed_statement ELSE open_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
     (85) other_statement -> . jumpstatement
     (86) other_statement -> . expression_statement
     (87) other_statement -> . compound_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
     (79) jumpstatement -> . CONTINUE ;
     (80) jumpstatement -> . BREAK ;
     (81) jumpstatement -> . RETURN expression ;
@@ -4837,9 +4895,9 @@ state 154
     (76) primary_expression -> . ID
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
-    FOR             shift and go to state 44
-    WHILE           shift and go to state 46
-    IF              shift and go to state 48
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
     CONTINUE        shift and go to state 53
     BREAK           shift and go to state 54
     RETURN          shift and go to state 55
@@ -4849,7 +4907,7 @@ state 154
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -4857,12 +4915,12 @@ state 154
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    closed_statement               shift and go to state 162
-    open_statement                 shift and go to state 163
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
+    expression                     shift and go to state 48
+    closed_statement               shift and go to state 160
+    other_statement                shift and go to state 161
+    open_statement                 shift and go to state 162
+    expression_statement           shift and go to state 47
+    jumpstatement                  shift and go to state 51
     compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
@@ -4876,7 +4934,27 @@ state 154
 
 state 155
 
-    (95) double_expression -> expression_statement . expression
+    (96) closed_statement -> WHILE ( expression ) . closed_statement
+    (92) open_statement -> WHILE ( expression ) . open_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
+    (85) other_statement -> . jumpstatement
+    (86) other_statement -> . expression_statement
+    (87) other_statement -> . compound_statement
+    (79) jumpstatement -> . CONTINUE ;
+    (80) jumpstatement -> . BREAK ;
+    (81) jumpstatement -> . RETURN expression ;
+    (82) jumpstatement -> . RETURN ;
+    (30) expression_statement -> . expression ;
+    (28) compound_statement -> . { declaration_list_opt }
+    (29) compound_statement -> . { declaration_list_opt statement_list }
     (31) expression -> . assigment_expression
     (32) expression -> . equality_expression
     (33) assigment_expression -> . equality_expression SUBEQ expression
@@ -4923,12 +5001,19 @@ state 155
     (76) primary_expression -> . ID
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
+    CONTINUE        shift and go to state 53
+    BREAK           shift and go to state 54
+    RETURN          shift and go to state 55
+    {               shift and go to state 23
     &               shift and go to state 65
     *               shift and go to state 64
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -4936,7 +5021,13 @@ state 155
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    expression                     shift and go to state 164
+    expression                     shift and go to state 48
+    closed_statement               shift and go to state 163
+    open_statement                 shift and go to state 164
+    other_statement                shift and go to state 44
+    expression_statement           shift and go to state 47
+    jumpstatement                  shift and go to state 51
+    compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -4948,230 +5039,6 @@ state 155
     string_literal                 shift and go to state 69
 
 state 156
-
-    (94) for_cond -> expression_statement double_expression .
-    )               reduce using rule 94 (for_cond -> expression_statement double_expression .)
-
-
-state 157
-
-    (97) closed_statement -> WHILE ( expression ) . closed_statement
-    (90) open_statement -> WHILE ( expression ) . open_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (85) other_statement -> . jumpstatement
-    (86) other_statement -> . expression_statement
-    (87) other_statement -> . compound_statement
-    (79) jumpstatement -> . CONTINUE ;
-    (80) jumpstatement -> . BREAK ;
-    (81) jumpstatement -> . RETURN expression ;
-    (82) jumpstatement -> . RETURN ;
-    (30) expression_statement -> . expression ;
-    (28) compound_statement -> . { declaration_list_opt }
-    (29) compound_statement -> . { declaration_list_opt statement_list }
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    FOR             shift and go to state 44
-    WHILE           shift and go to state 46
-    IF              shift and go to state 48
-    CONTINUE        shift and go to state 53
-    BREAK           shift and go to state 54
-    RETURN          shift and go to state 55
-    {               shift and go to state 23
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 47
-    closed_statement               shift and go to state 165
-    open_statement                 shift and go to state 166
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
-    compound_statement             shift and go to state 52
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 158
-
-    (98) closed_statement -> IF ( expression ) . closed
-    (89) open_statement -> IF ( expression ) . open
-    (91) open_statement -> IF ( expression ) . open_statement
-    (92) open_statement -> IF ( expression ) . other_statement
-    (100) closed -> . closed_statement ELSE closed_statement
-    (93) open -> . closed_statement ELSE open_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (85) other_statement -> . jumpstatement
-    (86) other_statement -> . expression_statement
-    (87) other_statement -> . compound_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (79) jumpstatement -> . CONTINUE ;
-    (80) jumpstatement -> . BREAK ;
-    (81) jumpstatement -> . RETURN expression ;
-    (82) jumpstatement -> . RETURN ;
-    (30) expression_statement -> . expression ;
-    (28) compound_statement -> . { declaration_list_opt }
-    (29) compound_statement -> . { declaration_list_opt statement_list }
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    FOR             shift and go to state 173
-    IF              shift and go to state 167
-    WHILE           shift and go to state 174
-    CONTINUE        shift and go to state 53
-    BREAK           shift and go to state 54
-    RETURN          shift and go to state 55
-    {               shift and go to state 23
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 47
-    closed                         shift and go to state 168
-    open                           shift and go to state 169
-    open_statement                 shift and go to state 170
-    other_statement                shift and go to state 171
-    closed_statement               shift and go to state 172
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
-    compound_statement             shift and go to state 52
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 159
 
     (51) postfix_expression -> postfix_expression [ expression ] .
     [               reduce using rule 51 (postfix_expression -> postfix_expression [ expression ] .)
@@ -5203,7 +5070,7 @@ state 159
     ,               reduce using rule 51 (postfix_expression -> postfix_expression [ expression ] .)
 
 
-state 160
+state 157
 
     (53) postfix_expression -> postfix_expression ( argument_expression_list ) .
     [               reduce using rule 53 (postfix_expression -> postfix_expression ( argument_expression_list ) .)
@@ -5235,7 +5102,7 @@ state 160
     ,               reduce using rule 53 (postfix_expression -> postfix_expression ( argument_expression_list ) .)
 
 
-state 161
+state 158
 
     (55) argument_expression_list -> argument_expression_list , . expression
     (31) expression -> . assigment_expression
@@ -5289,7 +5156,7 @@ state 161
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -5297,7 +5164,7 @@ state 161
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    expression                     shift and go to state 175
+    expression                     shift and go to state 165
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
     relational_expression          shift and go to state 58
@@ -5308,343 +5175,143 @@ state 161
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
 
+state 159
+
+    (94) closed_statement -> FOR ( expression_statement expression_statement expression . ) closed_statement
+    (88) open_statement -> FOR ( expression_statement expression_statement expression . ) open_statement
+    )               shift and go to state 166
+
+
+state 160
+
+    (95) closed_statement -> IF ( expression ) closed_statement . ELSE closed_statement
+    (91) open_statement -> IF ( expression ) closed_statement . ELSE open_statement
+    ELSE            shift and go to state 167
+
+
+state 161
+
+    (89) open_statement -> IF ( expression ) other_statement .
+    (93) closed_statement -> other_statement .
+    }               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    FOR             reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    IF              reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    WHILE           reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    CONTINUE        reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    BREAK           reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    RETURN          reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    {               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    &               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    *               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    !               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    +               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    -               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    (               reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    CHARACTER       reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    CONST           reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    FNUMBER         reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    INUMBER         reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    ID              reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    STRING          reduce using rule 89 (open_statement -> IF ( expression ) other_statement .)
+    ELSE            reduce using rule 93 (closed_statement -> other_statement .)
+
+
 state 162
 
-    (96) closed_statement -> FOR ( for_cond ) closed_statement .
-    }               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    FOR             reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    WHILE           reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    IF              reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    CONTINUE        reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    BREAK           reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    RETURN          reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    {               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    &               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    *               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    !               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    +               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    -               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    (               reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    CHARACTER       reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    CONST           reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    FNUMBER         reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    INUMBER         reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    ID              reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    STRING          reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
-    ELSE            reduce using rule 96 (closed_statement -> FOR ( for_cond ) closed_statement .)
+    (90) open_statement -> IF ( expression ) open_statement .
+    }               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    FOR             reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    IF              reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    WHILE           reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    CONTINUE        reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    BREAK           reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    RETURN          reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    {               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    &               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    *               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    !               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    +               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    -               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    (               reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    CHARACTER       reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    CONST           reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    FNUMBER         reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    INUMBER         reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    ID              reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
+    STRING          reduce using rule 90 (open_statement -> IF ( expression ) open_statement .)
 
 
 state 163
 
-    (88) open_statement -> FOR ( for_cond ) open_statement .
-    }               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    FOR             reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    WHILE           reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    IF              reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    CONTINUE        reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    BREAK           reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    RETURN          reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    {               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    &               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    *               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    !               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    +               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    -               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    (               reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    CHARACTER       reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    CONST           reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    FNUMBER         reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    INUMBER         reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    ID              reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
-    STRING          reduce using rule 88 (open_statement -> FOR ( for_cond ) open_statement .)
+    (96) closed_statement -> WHILE ( expression ) closed_statement .
+    }               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    FOR             reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    IF              reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    WHILE           reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    CONTINUE        reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    BREAK           reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    RETURN          reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    {               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    &               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    *               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    !               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    +               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    -               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    (               reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    CHARACTER       reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    CONST           reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    FNUMBER         reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    INUMBER         reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    ID              reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    STRING          reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
+    ELSE            reduce using rule 96 (closed_statement -> WHILE ( expression ) closed_statement .)
 
 
 state 164
 
-    (95) double_expression -> expression_statement expression .
-    )               reduce using rule 95 (double_expression -> expression_statement expression .)
+    (92) open_statement -> WHILE ( expression ) open_statement .
+    }               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    FOR             reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    IF              reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    WHILE           reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    CONTINUE        reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    BREAK           reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    RETURN          reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    {               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    &               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    *               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    !               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    +               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    -               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    (               reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    CHARACTER       reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    CONST           reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    FNUMBER         reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    INUMBER         reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    ID              reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
+    STRING          reduce using rule 92 (open_statement -> WHILE ( expression ) open_statement .)
 
 
 state 165
-
-    (97) closed_statement -> WHILE ( expression ) closed_statement .
-    }               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    FOR             reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    WHILE           reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    IF              reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    CONTINUE        reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    BREAK           reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    RETURN          reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    {               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    &               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    *               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    !               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    +               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    -               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    (               reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    CHARACTER       reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    CONST           reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    FNUMBER         reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    INUMBER         reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    ID              reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    STRING          reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-    ELSE            reduce using rule 97 (closed_statement -> WHILE ( expression ) closed_statement .)
-
-
-state 166
-
-    (90) open_statement -> WHILE ( expression ) open_statement .
-    }               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    FOR             reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    WHILE           reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    IF              reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    CONTINUE        reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    BREAK           reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    RETURN          reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    {               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    &               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    *               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    !               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    +               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    -               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    (               reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    CHARACTER       reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    CONST           reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    FNUMBER         reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    INUMBER         reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    ID              reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-    STRING          reduce using rule 90 (open_statement -> WHILE ( expression ) open_statement .)
-
-
-state 167
-
-    (89) open_statement -> IF . ( expression ) open
-    (91) open_statement -> IF . ( expression ) open_statement
-    (92) open_statement -> IF . ( expression ) other_statement
-    (98) closed_statement -> IF . ( expression ) closed
-    (               shift and go to state 176
-
-
-state 168
-
-    (98) closed_statement -> IF ( expression ) closed .
-    }               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    FOR             reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    WHILE           reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    IF              reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    CONTINUE        reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    BREAK           reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    RETURN          reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    {               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    &               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    *               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    !               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    +               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    -               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    (               reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    CHARACTER       reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    CONST           reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    FNUMBER         reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    INUMBER         reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    ID              reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    STRING          reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-    ELSE            reduce using rule 98 (closed_statement -> IF ( expression ) closed .)
-
-
-state 169
-
-    (89) open_statement -> IF ( expression ) open .
-    }               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    FOR             reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    WHILE           reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    IF              reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    CONTINUE        reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    BREAK           reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    RETURN          reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    {               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    &               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    *               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    !               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    +               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    -               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    (               reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    CHARACTER       reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    CONST           reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    FNUMBER         reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    INUMBER         reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    ID              reduce using rule 89 (open_statement -> IF ( expression ) open .)
-    STRING          reduce using rule 89 (open_statement -> IF ( expression ) open .)
-
-
-state 170
-
-    (91) open_statement -> IF ( expression ) open_statement .
-    }               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    FOR             reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    WHILE           reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    IF              reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    CONTINUE        reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    BREAK           reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    RETURN          reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    {               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    &               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    *               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    !               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    +               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    -               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    (               reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    CHARACTER       reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    CONST           reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    FNUMBER         reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    INUMBER         reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    ID              reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-    STRING          reduce using rule 91 (open_statement -> IF ( expression ) open_statement .)
-
-
-state 171
-
-    (92) open_statement -> IF ( expression ) other_statement .
-    (99) closed_statement -> other_statement .
-    }               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    FOR             reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    WHILE           reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    IF              reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    CONTINUE        reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    BREAK           reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    RETURN          reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    {               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    &               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    *               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    !               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    +               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    -               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    (               reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    CHARACTER       reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    CONST           reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    FNUMBER         reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    INUMBER         reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    ID              reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    STRING          reduce using rule 92 (open_statement -> IF ( expression ) other_statement .)
-    ELSE            reduce using rule 99 (closed_statement -> other_statement .)
-
-
-state 172
-
-    (100) closed -> closed_statement . ELSE closed_statement
-    (93) open -> closed_statement . ELSE open_statement
-    ELSE            shift and go to state 177
-
-
-state 173
-
-    (88) open_statement -> FOR . ( for_cond ) open_statement
-    (96) closed_statement -> FOR . ( for_cond ) closed_statement
-    (               shift and go to state 178
-
-
-state 174
-
-    (90) open_statement -> WHILE . ( expression ) open_statement
-    (97) closed_statement -> WHILE . ( expression ) closed_statement
-    (               shift and go to state 179
-
-
-state 175
 
     (55) argument_expression_list -> argument_expression_list , expression .
     )               reduce using rule 55 (argument_expression_list -> argument_expression_list , expression .)
     ,               reduce using rule 55 (argument_expression_list -> argument_expression_list , expression .)
 
 
-state 176
+state 166
 
-    (89) open_statement -> IF ( . expression ) open
-    (91) open_statement -> IF ( . expression ) open_statement
-    (92) open_statement -> IF ( . expression ) other_statement
-    (98) closed_statement -> IF ( . expression ) closed
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 180
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 177
-
-    (100) closed -> closed_statement ELSE . closed_statement
-    (93) open -> closed_statement ELSE . open_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
+    (94) closed_statement -> FOR ( expression_statement expression_statement expression ) . closed_statement
+    (88) open_statement -> FOR ( expression_statement expression_statement expression ) . open_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
     (85) other_statement -> . jumpstatement
     (86) other_statement -> . expression_statement
     (87) other_statement -> . compound_statement
@@ -5701,9 +5368,9 @@ state 177
     (76) primary_expression -> . ID
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
-    FOR             shift and go to state 44
-    WHILE           shift and go to state 46
-    IF              shift and go to state 48
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
     CONTINUE        shift and go to state 53
     BREAK           shift and go to state 54
     RETURN          shift and go to state 55
@@ -5713,7 +5380,7 @@ state 177
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -5721,12 +5388,12 @@ state 177
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    closed_statement               shift and go to state 181
-    open_statement                 shift and go to state 182
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
+    expression_statement           shift and go to state 47
+    expression                     shift and go to state 48
+    closed_statement               shift and go to state 168
+    open_statement                 shift and go to state 169
+    other_statement                shift and go to state 44
+    jumpstatement                  shift and go to state 51
     compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
@@ -5738,357 +5405,19 @@ state 177
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
 
-state 178
+state 167
 
-    (88) open_statement -> FOR ( . for_cond ) open_statement
-    (96) closed_statement -> FOR ( . for_cond ) closed_statement
-    (94) for_cond -> . expression_statement double_expression
-    (30) expression_statement -> . expression ;
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    for_cond                       shift and go to state 183
-    expression_statement           shift and go to state 124
-    expression                     shift and go to state 47
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 179
-
-    (90) open_statement -> WHILE ( . expression ) open_statement
-    (97) closed_statement -> WHILE ( . expression ) closed_statement
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 184
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 180
-
-    (89) open_statement -> IF ( expression . ) open
-    (91) open_statement -> IF ( expression . ) open_statement
-    (92) open_statement -> IF ( expression . ) other_statement
-    (98) closed_statement -> IF ( expression . ) closed
-    )               shift and go to state 185
-
-
-state 181
-
-    (100) closed -> closed_statement ELSE closed_statement .
-    }               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    FOR             reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    WHILE           reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    IF              reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    CONTINUE        reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    BREAK           reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    RETURN          reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    {               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    &               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    *               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    !               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    +               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    -               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    (               reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    CHARACTER       reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    CONST           reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    FNUMBER         reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    INUMBER         reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    ID              reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    STRING          reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-    ELSE            reduce using rule 100 (closed -> closed_statement ELSE closed_statement .)
-
-
-state 182
-
-    (93) open -> closed_statement ELSE open_statement .
-    }               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    FOR             reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    WHILE           reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    IF              reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    CONTINUE        reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    BREAK           reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    RETURN          reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    {               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    &               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    *               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    !               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    +               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    -               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    (               reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    CHARACTER       reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    CONST           reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    FNUMBER         reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    INUMBER         reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    ID              reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-    STRING          reduce using rule 93 (open -> closed_statement ELSE open_statement .)
-
-
-state 183
-
-    (88) open_statement -> FOR ( for_cond . ) open_statement
-    (96) closed_statement -> FOR ( for_cond . ) closed_statement
-    )               shift and go to state 186
-
-
-state 184
-
-    (90) open_statement -> WHILE ( expression . ) open_statement
-    (97) closed_statement -> WHILE ( expression . ) closed_statement
-    )               shift and go to state 187
-
-
-state 185
-
-    (89) open_statement -> IF ( expression ) . open
-    (91) open_statement -> IF ( expression ) . open_statement
-    (92) open_statement -> IF ( expression ) . other_statement
-    (98) closed_statement -> IF ( expression ) . closed
-    (93) open -> . closed_statement ELSE open_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (85) other_statement -> . jumpstatement
-    (86) other_statement -> . expression_statement
-    (87) other_statement -> . compound_statement
-    (100) closed -> . closed_statement ELSE closed_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (79) jumpstatement -> . CONTINUE ;
-    (80) jumpstatement -> . BREAK ;
-    (81) jumpstatement -> . RETURN expression ;
-    (82) jumpstatement -> . RETURN ;
-    (30) expression_statement -> . expression ;
-    (28) compound_statement -> . { declaration_list_opt }
-    (29) compound_statement -> . { declaration_list_opt statement_list }
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    FOR             shift and go to state 173
-    IF              shift and go to state 167
-    WHILE           shift and go to state 174
-    CONTINUE        shift and go to state 53
-    BREAK           shift and go to state 54
-    RETURN          shift and go to state 55
-    {               shift and go to state 23
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 47
-    open                           shift and go to state 169
-    open_statement                 shift and go to state 170
-    other_statement                shift and go to state 171
-    closed                         shift and go to state 168
-    closed_statement               shift and go to state 188
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
-    compound_statement             shift and go to state 52
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 186
-
-    (88) open_statement -> FOR ( for_cond ) . open_statement
-    (96) closed_statement -> FOR ( for_cond ) . closed_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
+    (95) closed_statement -> IF ( expression ) closed_statement ELSE . closed_statement
+    (91) open_statement -> IF ( expression ) closed_statement ELSE . open_statement
+    (93) closed_statement -> . other_statement
+    (94) closed_statement -> . FOR ( expression_statement expression_statement expression ) closed_statement
+    (95) closed_statement -> . IF ( expression ) closed_statement ELSE closed_statement
+    (96) closed_statement -> . WHILE ( expression ) closed_statement
+    (88) open_statement -> . FOR ( expression_statement expression_statement expression ) open_statement
+    (89) open_statement -> . IF ( expression ) other_statement
+    (90) open_statement -> . IF ( expression ) open_statement
+    (91) open_statement -> . IF ( expression ) closed_statement ELSE open_statement
+    (92) open_statement -> . WHILE ( expression ) open_statement
     (85) other_statement -> . jumpstatement
     (86) other_statement -> . expression_statement
     (87) other_statement -> . compound_statement
@@ -6145,9 +5474,9 @@ state 186
     (76) primary_expression -> . ID
     (77) string_literal -> . string_literal STRING
     (78) string_literal -> . STRING
-    FOR             shift and go to state 173
-    IF              shift and go to state 167
-    WHILE           shift and go to state 174
+    FOR             shift and go to state 45
+    IF              shift and go to state 49
+    WHILE           shift and go to state 50
     CONTINUE        shift and go to state 53
     BREAK           shift and go to state 54
     RETURN          shift and go to state 55
@@ -6157,7 +5486,7 @@ state 186
     !               shift and go to state 66
     +               shift and go to state 62
     -               shift and go to state 60
-    (               shift and go to state 45
+    (               shift and go to state 46
     CHARACTER       shift and go to state 70
     CONST           shift and go to state 71
     FNUMBER         shift and go to state 72
@@ -6165,12 +5494,12 @@ state 186
     ID              shift and go to state 74
     STRING          shift and go to state 75
 
-    open_statement                 shift and go to state 163
-    closed_statement               shift and go to state 162
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
+    expression                     shift and go to state 48
+    closed_statement               shift and go to state 170
+    open_statement                 shift and go to state 171
+    other_statement                shift and go to state 44
+    expression_statement           shift and go to state 47
+    jumpstatement                  shift and go to state 51
     compound_statement             shift and go to state 52
     assigment_expression           shift and go to state 56
     equality_expression            shift and go to state 57
@@ -6182,221 +5511,103 @@ state 186
     primary_expression             shift and go to state 68
     string_literal                 shift and go to state 69
 
-state 187
+state 168
 
-    (90) open_statement -> WHILE ( expression ) . open_statement
-    (97) closed_statement -> WHILE ( expression ) . closed_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (85) other_statement -> . jumpstatement
-    (86) other_statement -> . expression_statement
-    (87) other_statement -> . compound_statement
-    (79) jumpstatement -> . CONTINUE ;
-    (80) jumpstatement -> . BREAK ;
-    (81) jumpstatement -> . RETURN expression ;
-    (82) jumpstatement -> . RETURN ;
-    (30) expression_statement -> . expression ;
-    (28) compound_statement -> . { declaration_list_opt }
-    (29) compound_statement -> . { declaration_list_opt statement_list }
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    FOR             shift and go to state 173
-    IF              shift and go to state 167
-    WHILE           shift and go to state 174
-    CONTINUE        shift and go to state 53
-    BREAK           shift and go to state 54
-    RETURN          shift and go to state 55
-    {               shift and go to state 23
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
-
-    expression                     shift and go to state 47
-    open_statement                 shift and go to state 166
-    closed_statement               shift and go to state 165
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
-    compound_statement             shift and go to state 52
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
-
-state 188
-
-    (93) open -> closed_statement . ELSE open_statement
-    (100) closed -> closed_statement . ELSE closed_statement
-    ELSE            shift and go to state 189
+    (94) closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .
+    }               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    FOR             reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    IF              reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    WHILE           reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    CONTINUE        reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    BREAK           reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    RETURN          reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    {               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    &               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    *               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    !               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    +               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    -               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    (               reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    CHARACTER       reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    CONST           reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    FNUMBER         reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    INUMBER         reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    ID              reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    STRING          reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
+    ELSE            reduce using rule 94 (closed_statement -> FOR ( expression_statement expression_statement expression ) closed_statement .)
 
 
-state 189
+state 169
 
-    (93) open -> closed_statement ELSE . open_statement
-    (100) closed -> closed_statement ELSE . closed_statement
-    (88) open_statement -> . FOR ( for_cond ) open_statement
-    (89) open_statement -> . IF ( expression ) open
-    (90) open_statement -> . WHILE ( expression ) open_statement
-    (91) open_statement -> . IF ( expression ) open_statement
-    (92) open_statement -> . IF ( expression ) other_statement
-    (96) closed_statement -> . FOR ( for_cond ) closed_statement
-    (97) closed_statement -> . WHILE ( expression ) closed_statement
-    (98) closed_statement -> . IF ( expression ) closed
-    (99) closed_statement -> . other_statement
-    (85) other_statement -> . jumpstatement
-    (86) other_statement -> . expression_statement
-    (87) other_statement -> . compound_statement
-    (79) jumpstatement -> . CONTINUE ;
-    (80) jumpstatement -> . BREAK ;
-    (81) jumpstatement -> . RETURN expression ;
-    (82) jumpstatement -> . RETURN ;
-    (30) expression_statement -> . expression ;
-    (28) compound_statement -> . { declaration_list_opt }
-    (29) compound_statement -> . { declaration_list_opt statement_list }
-    (31) expression -> . assigment_expression
-    (32) expression -> . equality_expression
-    (33) assigment_expression -> . equality_expression SUBEQ expression
-    (34) assigment_expression -> . equality_expression MULEQ expression
-    (35) assigment_expression -> . equality_expression DIVEQ expression
-    (36) assigment_expression -> . equality_expression MODEQ expression
-    (37) assigment_expression -> . equality_expression ADDEQ expression
-    (38) assigment_expression -> . equality_expression = expression
-    (39) equality_expression -> . equality_expression NE relational_expression
-    (40) equality_expression -> . equality_expression EQ relational_expression
-    (41) equality_expression -> . relational_expression
-    (42) relational_expression -> . relational_expression GE additive_expression
-    (43) relational_expression -> . relational_expression LAND additive_expression
-    (44) relational_expression -> . relational_expression LOR additive_expression
-    (45) relational_expression -> . relational_expression > additive_expression
-    (46) relational_expression -> . relational_expression LE additive_expression
-    (47) relational_expression -> . relational_expression GT additive_expression
-    (48) relational_expression -> . relational_expression LT additive_expression
-    (49) relational_expression -> . relational_expression < additive_expression
-    (50) relational_expression -> . additive_expression
-    (67) additive_expression -> . additive_expression - mult_expression
-    (68) additive_expression -> . additive_expression + mult_expression
-    (69) additive_expression -> . mult_expression
-    (63) mult_expression -> . mult_expression % unary_expression
-    (64) mult_expression -> . mult_expression / unary_expression
-    (65) mult_expression -> . mult_expression * unary_expression
-    (66) mult_expression -> . unary_expression
-    (57) unary_expression -> . & unary_expression
-    (58) unary_expression -> . * unary_expression
-    (59) unary_expression -> . ! unary_expression
-    (60) unary_expression -> . + unary_expression
-    (61) unary_expression -> . - unary_expression
-    (62) unary_expression -> . postfix_expression
-    (51) postfix_expression -> . postfix_expression [ expression ]
-    (52) postfix_expression -> . postfix_expression ( )
-    (53) postfix_expression -> . postfix_expression ( argument_expression_list )
-    (54) postfix_expression -> . primary_expression
-    (70) primary_expression -> . ( expression )
-    (71) primary_expression -> . string_literal
-    (72) primary_expression -> . CHARACTER
-    (73) primary_expression -> . CONST
-    (74) primary_expression -> . FNUMBER
-    (75) primary_expression -> . INUMBER
-    (76) primary_expression -> . ID
-    (77) string_literal -> . string_literal STRING
-    (78) string_literal -> . STRING
-    FOR             shift and go to state 173
-    IF              shift and go to state 167
-    WHILE           shift and go to state 174
-    CONTINUE        shift and go to state 53
-    BREAK           shift and go to state 54
-    RETURN          shift and go to state 55
-    {               shift and go to state 23
-    &               shift and go to state 65
-    *               shift and go to state 64
-    !               shift and go to state 66
-    +               shift and go to state 62
-    -               shift and go to state 60
-    (               shift and go to state 45
-    CHARACTER       shift and go to state 70
-    CONST           shift and go to state 71
-    FNUMBER         shift and go to state 72
-    INUMBER         shift and go to state 73
-    ID              shift and go to state 74
-    STRING          shift and go to state 75
+    (88) open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .
+    }               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    FOR             reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    IF              reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    WHILE           reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    CONTINUE        reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    BREAK           reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    RETURN          reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    {               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    &               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    *               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    !               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    +               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    -               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    (               reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    CHARACTER       reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    CONST           reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    FNUMBER         reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    INUMBER         reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    ID              reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
+    STRING          reduce using rule 88 (open_statement -> FOR ( expression_statement expression_statement expression ) open_statement .)
 
-    closed_statement               shift and go to state 181
-    open_statement                 shift and go to state 182
-    expression                     shift and go to state 47
-    other_statement                shift and go to state 49
-    jumpstatement                  shift and go to state 50
-    expression_statement           shift and go to state 51
-    compound_statement             shift and go to state 52
-    assigment_expression           shift and go to state 56
-    equality_expression            shift and go to state 57
-    relational_expression          shift and go to state 58
-    additive_expression            shift and go to state 59
-    mult_expression                shift and go to state 61
-    unary_expression               shift and go to state 63
-    postfix_expression             shift and go to state 67
-    primary_expression             shift and go to state 68
-    string_literal                 shift and go to state 69
+
+state 170
+
+    (95) closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .
+    }               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    FOR             reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    IF              reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    WHILE           reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    CONTINUE        reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    BREAK           reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    RETURN          reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    {               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    &               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    *               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    !               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    +               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    -               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    (               reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    CHARACTER       reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    CONST           reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    FNUMBER         reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    INUMBER         reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    ID              reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    STRING          reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+    ELSE            reduce using rule 95 (closed_statement -> IF ( expression ) closed_statement ELSE closed_statement .)
+
+
+state 171
+
+    (91) open_statement -> IF ( expression ) closed_statement ELSE open_statement .
+    }               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    FOR             reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    IF              reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    WHILE           reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    CONTINUE        reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    BREAK           reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    RETURN          reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    {               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    &               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    *               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    !               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    +               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    -               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    (               reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    CHARACTER       reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    CONST           reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    FNUMBER         reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    INUMBER         reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    ID              reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
+    STRING          reduce using rule 91 (open_statement -> IF ( expression ) closed_statement ELSE open_statement .)
