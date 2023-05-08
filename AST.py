@@ -45,6 +45,10 @@ class node_test(Node):
     name : str
 
 @dataclass
+class Return(Statement):
+  expr: List[Expression] = field(default_factory=list)
+
+@dataclass
 class ID(Node):
     name : str
 
@@ -148,8 +152,8 @@ class Call(Expression):
 	
 @dataclass
 class Array(Expression):
-	name: str
-	args: List[Expression] = field(default_factory=list)
+  expr : Expression
+  index: Expression
 	
 	
 @dataclass
@@ -215,9 +219,6 @@ class Variable(Literal):
 # Expression representan valores
 #
 
-
-
-
 class RenderAST(Visitor):
     node_default = {
         'shape' : 'box',
@@ -245,8 +246,9 @@ class RenderAST(Visitor):
         return dot.dot
     def visit(self, n:TranslationUnit):
         name = self.name()
-        self.dot.node(name, label='decls')
+        self.dot.node(name, label='Funcion')
         for i in n.decls:
+            
             self.dot.edge(name, i.accept(self))
 
     def visit(self, n:FuncDeclaration):
@@ -269,7 +271,7 @@ class RenderAST(Visitor):
         return name
     def visit(self, n:Parameter_declaration):
         name = self.name()
-        self.dot.node(name, label='decls')
+        self.dot.node(name, label='ParamDeclaracion')
         for i in n.decls:
             self.dot.edge(name, i.accept(self))
     
@@ -306,8 +308,11 @@ class RenderAST(Visitor):
        
         self.dot.edge(name, n.cond.accept(self))
 
-        for i in n.cons:
-            self.dot.edge(name, i.accept(self))
+        
+        self.dot.edge(name, n.cond.accept(self))
+
+        
+        
         for i in n.altr:
             self.dot.edge(name, i.accept(self),label=f'Else:')
         
@@ -334,7 +339,7 @@ class RenderAST(Visitor):
     
     def visit(self, n:node_test):
         name = self.name()
-        self.dot.node(name, label=f"node test={n.name}")
+        self.dot.node(name, label=f"{n.name}")
         return name
     
     def visit(self, n:ID):
@@ -365,4 +370,28 @@ class RenderAST(Visitor):
     def visit(self, n:string_literal):
         name = self.name()
         self.dot.node(name, label=f"string literal={n.name}")
+        return name
+    
+    def visit(self, n:Return):
+        name = self.name()
+        self.dot.node(name, label=f"Return:")
+        self.dot.edge(name, n.expr.accept(self))
+        #for i in n.expr:
+         #   self.dot.edge(name, i.accept(self))
+        return name
+    
+    def visit(self, n:Call):
+        name = self.name()
+        self.dot.node(name, label=f"Call")
+        self.dot.edge(name, n.func.accept(self))
+        for i in n.args:
+            self.dot.edge(name, i.accept(self))
+        return name
+    
+    def visit(self, n:Array):
+        name = self.name()
+        self.dot.node(name, label=f"Array")
+        self.dot.edge(name, n.expr.accept(self))
+        self.dot.edge(name, n.index.accept(self))
+        
         return name

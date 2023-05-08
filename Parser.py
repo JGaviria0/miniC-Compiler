@@ -97,8 +97,8 @@ class Parser(sly.Parser):
 		
 	@_("parameter_list ',' ELLIPSIS")
 	def parameter_type_list(self, p):
-		#return Trinary_V2(p.parameter_list,p[1],p[2])
-		pass
+		return p.parameter_list
+		
 	@_("parameter_declaration")
 	def parameter_list(self, p):
 		return [p.parameter_declaration]
@@ -116,14 +116,13 @@ class Parser(sly.Parser):
 		return p.declaration_list_opt + p.statement_list
 		
 
-	@_("'{' declaration_list_opt '}'")
+	@_("'{' statement_list '}'")
 	def compound_statement(self, p):
-		return p.declaration_list_opt
+		return p.statement_list
 	
 	@_("expression ';'")
 	def expression_statement(self, p):
-		#return Unary(p[1],p.expression)
-		print(f'entre aaqui? {p.expression}')
+		
 		return p.expression
 	
 	@_("equality_expression")
@@ -132,7 +131,7 @@ class Parser(sly.Parser):
 		
 	@_("assigment_expression")
 	def expression(self, p):
-		print(f"es un assigment 134 equ_:{p.assigment_expression} ")
+		
 
 		return p.assigment_expression
 		
@@ -145,7 +144,7 @@ class Parser(sly.Parser):
 	   "equality_expression MULEQ expression",
 	   "equality_expression SUBEQ expression")
 	def assigment_expression(self, p):
-		print(f"es un assigment 145 equ_:{p.equality_expression} expr: {p.expression}")
+		
 		return Binary(p.equality_expression,p[1],p.expression)
 		
 	@_("relational_expression")
@@ -180,48 +179,49 @@ class Parser(sly.Parser):
 		
 	@_("postfix_expression '(' argument_expression_list ')'")
 	def postfix_expression(self, p):
-		#return Quadnary_v4(p.postfix_expression,p[1],p.argument_expression_list,p[3])
-		pass
+		return Call(p.postfix_expression, p.argument_expression_list)
+
+		
 	@_("postfix_expression '(' ')'")
 	def postfix_expression(self, p):
-		#return Trinary_V3(p.postfix_expression,p[1],p[2])
-		pass
+		return Call(p.postfix_expression,args=[])
+		
 	@_("postfix_expression '[' expression ']'")
 	def postfix_expression(self, p):
-		#return Quadnary_v4(p.postfix_expression,p[1],p.expression,p[3])
-		pass
+		return Array(p.postfix_expression, p.expression)
+		
 	@_("expression")
 	def argument_expression_list(self, p):
-		#return p.expression
-		pass
+		return [p.expression]
+		
 	@_("argument_expression_list ',' expression")
 	def argument_expression_list(self, p):
-		#return Binary(p.argument_expression_list,p[1],p.expression)
-		pass
+		return p.argument_expression_list + [p.expression]
+		
 	@_("postfix_expression")
 	def unary_expression(self, p):
 		return p.postfix_expression
 		
 	@_("'-' unary_expression")
 	def unary_expression(self, p):
-		#return Unary(p[0],p.unary_expression)
-		pass
+		return Unary(p[0],p.unary_expression)
+		
 	@_("'+' unary_expression")
 	def unary_expression(self, p):
-		#return Unary(p[0],p.unary_expression)
-		pass
+		return Unary(p[0],p.unary_expression)
+		
 	@_("'!' unary_expression")
 	def unary_expression(self, p):
-		#return Unary(p[0],p.unary_expression)
-		pass
+		return Unary(p[0],p.unary_expression)
+		
 	@_("'*' unary_expression")
 	def unary_expression(self, p):
-		#return Unary(p[0],p.unary_expression)
-		pass
+		return Unary(p[0],p.unary_expression)
+		
 	@_("'&' unary_expression")
 	def unary_expression(self, p):
-		#return Unary(p[0],p.unary_expression)
-		pass
+		return Unary(p[0],p.unary_expression)
+		
 	@_("unary_expression")
 	def mult_expression(self, p):
 		return p.unary_expression
@@ -268,35 +268,36 @@ class Parser(sly.Parser):
 		
 	@_("'(' expression ')'")
 	def primary_expression(self, p):
-		#return Trinary_V3(p.expression,p[0],p[2])
-		pass
+		return p.expression
+		
 
 	@_("STRING")
 	def string_literal(self, p):
-		#return Variable(p[0])
-		pass
+		return [p.STRING]
+		
 
 	@_("string_literal STRING")
 	def string_literal(self, p):
-	#	return ConstDeclaration(p[1],p.string_literal)
-		pass
+		return p.string_literal+[p.STRING]
 
 	@_("RETURN ';'")
 	def jumpstatement(self, p):
-		#return Assign(p[0],p[1])
-		pass
+		return Return()
+		
 	@_("RETURN expression ';'")
 	def jumpstatement(self, p):
-		#return Trinary_V3(p.expression,p[0],p[2])
-		pass
+		return Return(p.expression)
+		
 	@_("BREAK ';'")
 	def jumpstatement(self, p):
-		#return Assign(p[0],p[1])
-		pass
+		
+		return node_test("break")
+	
 	@_("CONTINUE ';'")
 	def jumpstatement(self, p):
-		#return Assign(p[0],p[1])
-		pass
+		return[]
+		#return node_test("continue")
+	
 	@_("open_statement")
 	def statement(self, p):
 		return p.open_statement 
@@ -315,8 +316,8 @@ class Parser(sly.Parser):
 		
 	@_("jumpstatement")
 	def other_statement(self, p):
-		#return p.jumpstatement
-		pass
+		return p.jumpstatement
+		
 
 	@_("WHILE '(' expression ')' open_statement")
 	def open_statement(self, p):
