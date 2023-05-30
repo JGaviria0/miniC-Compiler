@@ -1,15 +1,11 @@
-import logging
 import sly
 from AST import *
-from rich import print as rprint
 from Lexer import Lexer
-
 
 class Parser(sly.Parser):
 	debugfile = "minic.txt"
 
 	tokens = Lexer.tokens
-	
 
 	@_("translation_unit")
 	def program(self, p):
@@ -30,25 +26,22 @@ class Parser(sly.Parser):
 	@_("declaration")
 	def external_declaration(self, p):
 		return p.declaration
-		
 
 	@_("type_specifier declarator compound_statement")
 	def function_definition(self, p):
-		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement)
-		
+		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement)	
 
 	@_("STATIC type_specifier declarator compound_statement")
 	def function_definition(self, p):
-		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement,Static=True)
-		
+		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement,Static=True)	
 
 	@_("type_specifier declarator ';'")
 	def declaration(self, p):
-		return VarDeclaration(p.type_specifier, p.declarator, p[2])
+		return VarDeclaration(p.type_specifier, p.declarator)
 		
 	@_("EXTERN type_specifier declarator ';'")
 	def declaration(self, p):
-		return VarDeclaration(p.type_specifier,p.declarator,p[3],Ext=True)
+		return VarDeclaration(p.type_specifier,p.declarator,Ext=True)
 		
 	@_("empty")
 	def declaration_list_opt(self, p):
@@ -60,9 +53,8 @@ class Parser(sly.Parser):
 		
 	@_("declaration")
 	def declaration_list(self, p):
-		return  [p.declaration]
-		
-#....	
+		return [p.declaration]
+
 	@_("declaration_list declaration")
 	def declaration_list(self, p):
 		return p.declaration_list+[p.declaration]
@@ -122,7 +114,6 @@ class Parser(sly.Parser):
 	
 	@_("expression ';'")
 	def expression_statement(self, p):
-		
 		return p.expression
 	
 	@_("equality_expression")
@@ -131,11 +122,7 @@ class Parser(sly.Parser):
 		
 	@_("assigment_expression")
 	def expression(self, p):
-		
-
 		return p.assigment_expression
-		
-
 
 	@_("equality_expression '='   expression",
 	   "equality_expression ADDEQ expression",
@@ -144,7 +131,6 @@ class Parser(sly.Parser):
 	   "equality_expression MULEQ expression",
 	   "equality_expression SUBEQ expression")
 	def assigment_expression(self, p):
-		
 		return Binary(p.equality_expression,p[1],p.expression)
 		
 	@_("relational_expression")
@@ -168,10 +154,9 @@ class Parser(sly.Parser):
 	   "relational_expression LOR additive_expression",
 	   "relational_expression LAND additive_expression",
 	   "relational_expression GE  additive_expression")
+	
 	def relational_expression(self, p):
-		
 		return Binary(p.relational_expression,p[1],p.additive_expression)
-
 		
 	@_("primary_expression")
 	def postfix_expression(self, p):
@@ -243,7 +228,6 @@ class Parser(sly.Parser):
 		
 	@_("ID")
 	def primary_expression(self, p):
-		
 		return ID(p[0])
 		
 	@_("INUMBER")
@@ -269,12 +253,10 @@ class Parser(sly.Parser):
 	@_("'(' expression ')'")
 	def primary_expression(self, p):
 		return p.expression
-		
 
 	@_("STRING")
 	def string_literal(self, p):
 		return [p.STRING]
-		
 
 	@_("string_literal STRING")
 	def string_literal(self, p):
@@ -290,7 +272,6 @@ class Parser(sly.Parser):
 		
 	@_("BREAK ';'")
 	def jumpstatement(self, p):
-		
 		return node_test("break")
 	
 	@_("CONTINUE ';'")
@@ -316,14 +297,12 @@ class Parser(sly.Parser):
 		
 	@_("jumpstatement")
 	def other_statement(self, p):
-		return p.jumpstatement
-		
+		return p.jumpstatement	
 
 	@_("WHILE '(' expression ')' open_statement")
 	def open_statement(self, p):
 		
 		return WhileStmt( p.expression, p.open_statement )
-    
     
 	@_("WHILE '(' expression ')' closed_statement")
 	def closed_statement(self, p):
@@ -346,8 +325,6 @@ class Parser(sly.Parser):
 	def open_statement(self, p):
 		return IfStmt(p.expression, p.other_statement)
 
-	
-
 	@_("FOR '(' expression_statement expression_statement expression ')' open_statement")
 	def open_statement(self, p):
 		return For( p.expression_statement0, p.expression_statement1, p.expression, p.open_statement )
@@ -356,13 +333,9 @@ class Parser(sly.Parser):
 	def closed_statement(self, p):
 		return For( p.expression_statement0, p.expression_statement1, p.expression, p.closed_statement )
 
-
 	@_("other_statement")
 	def closed_statement(self, p):
 		return p.other_statement
-		
-
-
 
 	@_("statement")
 	def statement_list(self, p):
@@ -383,24 +356,3 @@ class Parser(sly.Parser):
 		print(f"{lineno}: Error de Sintaxis en {value}")
 		raise SyntaxError()
 	
-
-if __name__ == '__main__':
-	import sys
-	
-	if len(sys.argv) != 2:
-		print(f"usage: python {sys.argv[0]} fname")
-		exit(1)
-	
-	l = Lexer()
-	
-	p = Parser()
-	txt = open(sys.argv[1], encoding='utf-8').read()
-
-	ast = p.parse(l.tokenize(txt))
-	dot = RenderAST.render(ast)
-	print("Archivo minic.txt creado con exito")
-	print(ast)
-
-	f = open('tree.dot','w')
-	f.write(str(dot))
-	f.close()

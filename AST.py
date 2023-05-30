@@ -72,10 +72,7 @@ class CHARACTER(Node):
 class string_literal(Node):
     name : str
 
-@dataclass
-class ExprStmt(Statement):
-	expr: Expression
-	
+
 @dataclass
 class IfStmt(Statement):
     cond   : Expression
@@ -131,19 +128,21 @@ class Binary(Expression):
 	op   : str
 	right: Expression
 
-@dataclass
-class Assign(Expression):
-	name : str
-	opr: str
 
 @dataclass
 class Return(Statement):
-	expr: Expression
+
+    expr: Expression = None
 	
 @dataclass
 class Literal(Expression):
 	value: Any
+
 	
+@dataclass
+class Variable(Literal):
+    name: str
+    
 @dataclass
 class Call(Expression):
 	func: str
@@ -156,11 +155,7 @@ class Array(Expression):
   index: Expression
 	
 	
-@dataclass
-class Logical(Expression):
-	op   : str
-	left : Expression
-	right: Expression
+
 #------------------------------------------------------------
 #Declaration
 #------------------------------------------------------------
@@ -176,7 +171,7 @@ class FuncDeclaration(Declaration):
 class VarDeclaration(Declaration):
 	name: str
 	expr: Expression
-	end:str
+
 	Ext:bool=False
 	Static : bool = False
 
@@ -202,22 +197,20 @@ class TranslationUnit(Statement):
 @dataclass
 class Parameter_declaration(Statement):
 	decls : List[Statement]
-	
 
 
 
 @dataclass
 class ParamList(Declaration):
-  params  : List[Parameter]
-  ellipsis: bool = False
+    params  : List[Parameter]
+    ellipsis: bool = False
 
 
-@dataclass
-class Variable(Literal):
-  name: str
+
 # ----------------------------------------
 # Expression representan valores
 #
+
 
 class RenderAST(Visitor):
     node_default = {
@@ -256,7 +249,6 @@ class RenderAST(Visitor):
         self.dot.node(name, label=f"Func Declaration\ntype:{n.name} \nexternal:{n.Static}\n")
         self.dot.edge(name, n.params.accept(self))
         for i in n.body:
-            print(i)
             self.dot.edge(name, i.accept(self))
         return name
     def visit(self, n:FuncDeclarationStmt):
@@ -277,7 +269,7 @@ class RenderAST(Visitor):
     
     def visit(self, n:VarDeclaration):
         name = self.name()
-        self.dot.node(name, label=f'Var declaraiton\ntype: {n.name}\nexpr: {n.expr}')
+        self.dot.node(name, label=f'Var declaration\ntype: {n.name}\nexpr: {n.expr}')
         return name
     
     def visit(self, n:WhileStmt):

@@ -30,7 +30,7 @@
 #
 # ---------------------------------------------------------------------
 
-from mcast import *
+from AST import *
 
 # ---------------------------------------------------------------------
 #  Tabla de Simbolos
@@ -130,7 +130,21 @@ class Checker(Visitor):
         env = Symtab(env)
         for param in node.params:
             self._add_symbol(VarDeclaration(param))
-        for stmt in node.stmts:
+        for stmt in node.body:
+            stmt.accept(self, env)
+    
+    def visit(self, node: FuncDeclarationStmt, env: Symtab):
+        '''
+        1. Agregar el nombre de la función a la tabla de simbolos actual
+        2. Crear una nueva tabla de simbolos (contexto)
+        3. Agregamos los parametros a la nueva tabla de simbolos
+        4. Visitar cada una de las instrucciones del cuerpo de la funcion
+        '''
+        self._add_symbol(node, env)
+        env = Symtab(env)
+        # for param in node.params:
+        #     self._add_symbol(VarDeclaration(param))
+        for stmt in node.body:
             stmt.accept(self, env)
         
     def visit(self, node: VarDeclaration, env: Symtab):
@@ -144,11 +158,11 @@ class Checker(Visitor):
         
     # Statement
     
-    def visit(self, node: Block, env: Symtab):
+    def visit(self, node: Parameter_declaration, env: Symtab):
         '''
         1. Visitar cada una de las instrucciones
         '''
-        for stmt in node.stmts:
+        for stmt in node.decls:
             stmt.accept(self, env)
         
     def visit(self, node: IfStmt, env: Symtab):

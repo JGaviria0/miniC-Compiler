@@ -54,9 +54,6 @@ class Lexer(sly.Lexer):
     ID['static']   = STATIC 
     ID['void']     = VOID
     ID['while']    = WHILE
-    
-   
-   
 
     ELLIPSIS = r'\.\.\.'
     

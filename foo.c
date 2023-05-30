@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
     // Prueba de bucle while con break/continue
     i = 0;
     while (1) {
-        show_fib();
+        // show_fib();
         i += 1;
         if (i > 5) break;
         else continue;
@@ -100,33 +100,33 @@ int main(int argc, char **argv) {
     // Prueba de direccion operador (&)
     set_a(&c);
 
-    {
-        // Prueba de coercion de tipos char-int e int-char
-        int a;
-        char b;
-        int c;
+    // {
+    //     // Prueba de coercion de tipos char-int e int-char
+    //     int a;
+    //     char b;
+    //     int c;
 
-        /*
-            Note que es aritmetica en complemento de dos, es un
-            int de 32-bit consistente de todo 1s.
+    //     /*
+    //         Note que es aritmetica en complemento de dos, es un
+    //         int de 32-bit consistente de todo 1s.
 
-            (Esto tambien es una prueba del '-' unario)
-        */
-        a = -1;
+    //         (Esto tambien es una prueba del '-' unario)
+    //     */
+    //     a = -1;
 
-        /*
-            La siguiente linea levanta un warning del compilador, ya
-            que un int de 32-bit con signo esta siendo truncado a un 
-            char de 8-bits
-        */
-        b = a;
+    //     /*
+    //         La siguiente linea levanta un warning del compilador, ya
+    //         que un int de 32-bit con signo esta siendo truncado a un 
+    //         char de 8-bits
+    //     */
+    //     b = a;
 
-        c = b;
+    //     c = b;
 
-        printf("  a = %d\n", a);
-        printf("  b = %d\n", b);
-        printf("  c = %d\n", c);
-    }
+    //     printf("  a = %d\n", a);
+    //     printf("  b = %d\n", b);
+    //     printf("  c = %d\n", c);
+    // }
 
     /*
         Tenga en cuenta ahora que el alcance de c está en el alcance principal de la función, 
@@ -141,20 +141,20 @@ int main(int argc, char **argv) {
     // Ejemplo de indexación de puntero a través de matriz.
     printf("get_literal()[3] = %c\n", get_literal()[3]);
 
-    {
-        /*
-            Prueba de construccion de un string usando asignacion
-            via indice de arreglo de un puntero char. El buffer
-            es dinamicamente localizado.
-        */
-        char *c;
+    // {
+    //     /*
+    //         Prueba de construccion de un string usando asignacion
+    //         via indice de arreglo de un puntero char. El buffer
+    //         es dinamicamente localizado.
+    //     */
+    //     char *c;
 
-        c = malloc(30);
-        c[0] = 'h';
-        c[1] = 'i';
-        c[2] = 0;
-        printf("string es: %s\n", c);
-        free(c);
-    }
+    //     c = malloc(30);
+    //     c[0] = 'h';
+    //     c[1] = 'i';
+    //     c[2] = 0;
+    //     printf("string es: %s\n", c);
+    //     free(c);
+    // }
     return 0;
 }
