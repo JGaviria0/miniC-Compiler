@@ -108,7 +108,7 @@ if __name__ == '__main__':
             f.close()
             check_call(['dot','-Tpng',f'{i}.dot','-o',f'{i}.png'])
 
-        checker = Checker().check(ast)
+        checker = Checker().check(ast, symtable = args.sym)
 
 
     # print("Archivo minic.txt creado con exito")

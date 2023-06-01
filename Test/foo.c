@@ -37,7 +37,7 @@ int fib_count;
 // Funcion fibonacci: Prueba una bifurcacion simple y recursion
 static int fib(int n) {
     fib_count += 1;
-    if (n <= 1) return n;
+    if (n <= 1) {return n;}
     return fib(n-1) + fib(n-2);
 }
 
@@ -87,8 +87,12 @@ int main(int argc, char **argv) {
     while (1) {
         // show_fib();
         i += 1;
-        if (i > 5) break;
-        else continue;
+        if (i > 5) {
+            int testif;
+            testif = 1; 
+            break;
+        }
+        else {continue;}
     }
     stuff_count = stuff_count * 2;
 

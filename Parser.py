@@ -3,7 +3,7 @@ from AST import *
 from Lexer import Lexer
 
 class Parser(sly.Parser):
-	debugfile = "minic.txt"
+	# debugfile = "minic.txt"
 
 	tokens = Lexer.tokens
 
@@ -29,19 +29,19 @@ class Parser(sly.Parser):
 
 	@_("type_specifier declarator compound_statement")
 	def function_definition(self, p):
-		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement)	
+		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement, lineno=p.lineno)	
 
 	@_("STATIC type_specifier declarator compound_statement")
 	def function_definition(self, p):
-		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement,Static=True)	
+		return FuncDeclaration(p.type_specifier,p.declarator,p.compound_statement,Static=True, lineno=p.lineno)	
 
 	@_("type_specifier declarator ';'")
 	def declaration(self, p):
-		return VarDeclaration(p.type_specifier, p.declarator)
+		return VarDeclaration(p.type_specifier, p.declarator, lineno=p.lineno)
 		
 	@_("EXTERN type_specifier declarator ';'")
 	def declaration(self, p):
-		return VarDeclaration(p.type_specifier,p.declarator,Ext=True)
+		return VarDeclaration(p.type_specifier,p.declarator,Ext=True, lineno=p.lineno)
 		
 	@_("empty")
 	def declaration_list_opt(self, p):
@@ -69,7 +69,7 @@ class Parser(sly.Parser):
 		
 	@_("'*' declarator")
 	def declarator(self, p):
-		return node_test("declarator")
+		return p.declarator
 		
 	@_("ID")
 	def direct_declarator(self, p):
@@ -101,16 +101,21 @@ class Parser(sly.Parser):
 		
 	@_("type_specifier declarator")
 	def parameter_declaration(self, p):
-		return TypeDeclaration(p.type_specifier,p.declarator)
+		return TypeDeclaration(p.type_specifier,p.declarator, p.lineno)
 		
 	@_("'{' declaration_list_opt statement_list '}'")
 	def compound_statement(self, p):
 		return p.declaration_list_opt + p.statement_list
 		
-
-	@_("'{' statement_list '}'")
+	# Segun el profesor esta es la que debe ir pero genera
+	# WARNING: 19 shift/reduce conflicts
+	# @_("'{' statement_list '}'")
+	# def compound_statement(self, p):
+	# 	return p.statement_list
+	
+	@_("'{' declaration_list_opt '}'")
 	def compound_statement(self, p):
-		return p.statement_list
+		return p.declaration_list_opt
 	
 	@_("expression ';'")
 	def expression_statement(self, p):
@@ -228,16 +233,16 @@ class Parser(sly.Parser):
 		
 	@_("ID")
 	def primary_expression(self, p):
-		return ID(p[0])
+		return ID(p[0], p.lineno)
 		
 	@_("INUMBER")
 	def primary_expression(self, p):
-		
 		return INUMBER(p[0])
+	
 	@_("FNUMBER")
 	def primary_expression(self, p):
-		
 		return FNUMBER(p[0])
+	
 	@_("CONST")
 	def primary_expression(self, p):
 		
@@ -264,20 +269,19 @@ class Parser(sly.Parser):
 
 	@_("RETURN ';'")
 	def jumpstatement(self, p):
-		return Return()
+		return Return(lineno=p.lineno)
 		
 	@_("RETURN expression ';'")
 	def jumpstatement(self, p):
-		return Return(p.expression)
+		return Return(p.expression, p.lineno)
 		
 	@_("BREAK ';'")
 	def jumpstatement(self, p):
-		return node_test("break")
+		return Break(p.lineno)
 	
 	@_("CONTINUE ';'")
 	def jumpstatement(self, p):
-		return[]
-		#return node_test("continue")
+		return Continue(p.lineno)
 	
 	@_("open_statement")
 	def statement(self, p):

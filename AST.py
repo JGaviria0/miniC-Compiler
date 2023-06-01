@@ -41,16 +41,13 @@ class Declaration(Statement):
 #------------------------------------------------------------
 
 @dataclass
-class node_test(Node):
-    name : str
-
-@dataclass
 class Return(Statement):
   expr: List[Expression] = field(default_factory=list)
 
 @dataclass
 class ID(Node):
     name : str
+    lineno: int = 0
 
 @dataclass
 class INUMBER(Node):
@@ -94,11 +91,11 @@ class For(Statement):
 
 @dataclass
 class Continue(Statement):
-	pass
+	lineno: int = 0
 
 @dataclass
 class Break(Statement):
-	pass
+	lineno: int = 0
 	
 @dataclass
 class CompoundStmt(Statement):
@@ -131,8 +128,8 @@ class Binary(Expression):
 
 @dataclass
 class Return(Statement):
-
     expr: Expression = None
+    lineno: int = 0
 	
 @dataclass
 class Literal(Expression):
@@ -147,7 +144,6 @@ class Variable(Literal):
 class Call(Expression):
 	func: str
 	args: List[Expression] = field(default_factory=list)
-	
 	
 @dataclass
 class Array(Expression):
@@ -166,14 +162,15 @@ class FuncDeclaration(Declaration):
 	params: List[Expression]=field(default_factory=list)
 	body: List[Statement]=field(default_factory=list)
 	Static:bool=False
+	lineno: int = 0
 
 @dataclass
 class VarDeclaration(Declaration):
 	name: str
 	expr: Expression
-
 	Ext:bool=False
 	Static : bool = False
+	lineno: int = 0
 
 @dataclass
 class ConstDeclaration(Declaration):
@@ -184,6 +181,7 @@ class ConstDeclaration(Declaration):
 class TypeDeclaration(Statement):
     Type: str
     body: Statement
+    lineno: int = 0
 
 @dataclass
 class FuncDeclarationStmt(Statement):
@@ -242,7 +240,6 @@ class RenderAST(Visitor):
         name = self.name()
         self.dot.node(name, label='Funcion')
         for i in n.decls:
-            
             self.dot.edge(name, i.accept(self))
 
     def visit(self, n:FuncDeclaration):
@@ -260,8 +257,13 @@ class RenderAST(Visitor):
         return name
     def visit(self, n:TypeDeclaration):
         name = self.name()
-        self.dot.node(name, label=f"Param\nType:{n.Type} \n name:{n.body}")
+        if type(n.body) != str:
+            self.dot.node(name, label=f"Param\nType:{n.Type} \n")
+            self.dot.edge(name, n.body.accept(self))
+        else: 
+             self.dot.node(name, label=f"Param\nType:{n.Type} \n name:{n.body}")
         return name
+    
     def visit(self, n:Parameter_declaration):
         name = self.name()
         self.dot.node(name, label='ParamDeclaracion')
@@ -270,7 +272,11 @@ class RenderAST(Visitor):
     
     def visit(self, n:VarDeclaration):
         name = self.name()
-        self.dot.node(name, label=f'Var declaration\ntype: {n.name}\nexpr: {n.expr}')
+        if type(n.expr ) != str: 
+            self.dot.node(name, label=f'Var declaration\ntype: {n.name}')
+            self.dot.edge(name, n.expr.accept(self))
+        else: 
+            self.dot.node(name, label=f'Var declaration\ntype: {n.name}\nname: {n.expr}')
         return name
     
     def visit(self, n:WhileStmt):
@@ -326,9 +332,14 @@ class RenderAST(Visitor):
         self.dot.node(name, label=f"Ident\\nname={n.name}")
         return name
     
-    def visit(self, n:node_test):
+    def visit(self, n:Break):
         name = self.name()
-        self.dot.node(name, label=f"{n.name}")
+        self.dot.node(name, label=f"Break")
+        return name
+    
+    def visit(self, n:Continue):
+        name = self.name()
+        self.dot.node(name, label=f"Continue")
         return name
     
     def visit(self, n:ID):
@@ -364,9 +375,8 @@ class RenderAST(Visitor):
     def visit(self, n:Return):
         name = self.name()
         self.dot.node(name, label=f"Return:")
-        self.dot.edge(name, n.expr.accept(self))
-        #for i in n.expr:
-         #   self.dot.edge(name, i.accept(self))
+        if n.expr:
+            self.dot.edge(name, n.expr.accept(self))
         return name
     
     def visit(self, n:Call):
