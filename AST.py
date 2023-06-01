@@ -237,6 +237,7 @@ class RenderAST(Visitor):
         dot = cls()
         n.accept(dot)
         return dot.dot
+    
     def visit(self, n:TranslationUnit):
         name = self.name()
         self.dot.node(name, label='Funcion')
@@ -297,14 +298,10 @@ class RenderAST(Visitor):
     def visit(self, n:IfStmt):
         name = self.name()
         self.dot.node(name, label=f'If\cond: ')
-       
         self.dot.edge(name, n.cond.accept(self))
+        for i in n.cons:
+            self.dot.edge(name, i.accept(self))
 
-        
-        self.dot.edge(name, n.cond.accept(self))
-
-        
-        
         for i in n.altr:
             self.dot.edge(name, i.accept(self),label=f'Else:')
         

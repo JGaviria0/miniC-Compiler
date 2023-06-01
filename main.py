@@ -20,6 +20,7 @@ from subprocess import check_call
 from Lexer import Lexer
 from AST import *
 from Parser import Parser
+from checker import *
 # from mclex       import print_lexer
 # from mcparse     import Parser
 # from mcast       import *
@@ -107,8 +108,7 @@ if __name__ == '__main__':
             f.close()
             check_call(['dot','-Tpng',f'{i}.dot','-o',f'{i}.png'])
 
-    # # checker = Checker()
-    # # checker.check(ast)
+        checker = Checker().check(ast)
 
 
     # print("Archivo minic.txt creado con exito")
