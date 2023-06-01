@@ -1,0 +1,101 @@
+// Dot
+digraph AST {
+	node [color=deepskyblue shape=box style=filled]
+	edge [arrowhead=none]
+	n01 [label=Funcion]
+	n02 [label="Var declaration
+type: int
+expr: fib"]
+	n01 -> n02
+	n03 [label="Func Declaration
+type:int 
+external:False
+"]
+	n04 [label="Funcion 
+name:fibo 
+"]
+	n05 [label="Param
+Type:int 
+ name:a"]
+	n04 -> n05
+	n03 -> n04
+	n06 [label="Var declaration
+type: int
+expr: b"]
+	n03 -> n06
+	n07 [label="Var declaration
+type: int
+expr: e"]
+	n03 -> n07
+	n08 [label="Return:"]
+	n09 [label="INUMBER=0"]
+	n08 -> n09
+	n03 -> n08
+	n01 -> n03
+	n10 [label="Func Declaration
+type:int 
+external:False
+"]
+	n11 [label="Funcion 
+name:fibo2 
+"]
+	n12 [label="Param
+Type:int 
+ name:k"]
+	n11 -> n12
+	n10 -> n11
+	n13 [label="If\cond: "]
+	n14 [label="Binary\nop:=="]
+	n15 [label="ID=k"]
+	n14 -> n15
+	n16 [label="INUMBER=1"]
+	n14 -> n16
+	n13 -> n14
+	n17 [label="Var declaration
+type: int
+expr: ka"]
+	n13 -> n17
+	n18 [label="Var declaration
+type: int
+expr: ka"]
+	n13 -> n18
+	n19 [label="Binary\nop:="]
+	n20 [label="ID=k"]
+	n19 -> n20
+	n21 [label="INUMBER=1"]
+	n19 -> n21
+	n13 -> n19
+	n22 [label="Return:"]
+	n23 [label="INUMBER=1"]
+	n22 -> n23
+	n13 -> n22 [label="Else:"]
+	n10 -> n13
+	n24 [label="Return:"]
+	n25 [label="INUMBER=0"]
+	n24 -> n25
+	n10 -> n24
+	n01 -> n10
+	n26 [label="Func Declaration
+type:int 
+external:False
+"]
+	n27 [label="Funcion 
+name:main 
+"]
+	n26 -> n27
+	n28 [label="Var declaration
+type: int
+expr: abc"]
+	n26 -> n28
+	n29 [label="Binary\nop:="]
+	n30 [label="ID=abc"]
+	n29 -> n30
+	n31 [label="INUMBER=1"]
+	n29 -> n31
+	n26 -> n29
+	n32 [label="Return:"]
+	n33 [label="INUMBER=0"]
+	n32 -> n33
+	n26 -> n32
+	n01 -> n26
+}
