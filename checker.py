@@ -38,20 +38,16 @@ class Symtab:
     class SymbolDefinedError(Exception):
         pass
         
-    def __init__(self, parent=None, name=None, lineno=0):
+    def __init__(self, parent=None, name=None, lineno=0, Return=False):
         self.name = name
         self.entries = {}
         self.parent = parent
         self.bealoop = False
-        self.Return = False 
+        self.Return = Return 
         self.lieneo = lineno
         if self.parent:
             self.parent.children.append(self)
         self.children = []
-
-        exception = ["While", "For", "If", "Global"]
-        if name in exception:
-            self.Return = True
 
     def haveReturn(self):
         self.Return = True
@@ -67,9 +63,9 @@ class Symtab:
     def printenv(self):
         for child in self.children:
             child.printenv()
-        print(" ", self.name, ": ", self.Return)
+        print(" ", self.name, ": ")
         for i in self.entries:
-            print("   ", i)
+            print("   ", i, "-", self.entries[i])
 
     def iamaloop(self):
         self.bealoop = True
@@ -92,6 +88,11 @@ class Symtab:
         elif self.parent:
             return self.parent.get(name)
         return None
+    
+INT = 'int'
+FLOAT = 'float'
+CHAR = 'char'
+STR = 'str'
 
 class Checker(Visitor):
     def __init__(self):
@@ -110,22 +111,22 @@ class Checker(Visitor):
     def check(cls, model, symtable):
         checker = cls()
         cls.symtable = symtable
-        model.accept(checker, Symtab(name="Global"))
+        model.accept(checker, Symtab(name="Global", Return=True))
         return checker
         
     def visit(self, node: TranslationUnit, env: Symtab):
         for decl in node.decls:
             decl.accept(self, env)    
         if not "main" in env.entries:
-            self.error(f"No existe funcion " + "\x1b[1;31m" +"main")
+            self.error(f"No existe funcion " + "\x1b[1;31m" +"main" + "\x1b[0;0m.")
         env.checkReturn()
         if self.symtable: 
-            print("\nTabla de simbolos: ")
+            print("\n\x1b[1;34mTabla de simbolos: \x1b[0;0m")
             env.printenv()
 
     def visit(self, node: FuncDeclaration, env: Symtab):
         name = node.params.accept(self, None)
-        self._add_symbol(node, name, env, node.lineno)
+        self._add_symbol(node.name, name, env, node.lineno)
         newenv = Symtab(env, name, node.lineno)
         node.params.accept(self, newenv)
 
@@ -139,7 +140,7 @@ class Checker(Visitor):
             stmt.accept(self, env)
         
     def visit(self, node: TypeDeclaration, env: Symtab):
-        self._add_symbol(node, node.body, env, node.lineno)
+        self._add_symbol(node.Type, node.body, env, node.lineno)
 
     def visit(self, node: Parameter_declaration, env: Symtab):
         for stmt in node.decls:
@@ -147,19 +148,25 @@ class Checker(Visitor):
 
     def visit(self, node: VarDeclaration, env: Symtab):
         if type(node.expr) == str:
-            self._add_symbol(node, node.expr, env, node.lineno)
+            self._add_symbol(node.name, node.expr, env, node.lineno)
         else: 
-            node.expr.accept(self, env)
+            name = node.expr.accept(self, None)
+            self._add_symbol(node.name, name, env, node.lineno)
+            # newenv = Symtab(env, name, node.lineno)
+            # node.expr.accept(self, newenv)
         
     def visit(self, node: WhileStmt, env: Symtab):
-        newenv = Symtab(env, "While")
+        newenv = Symtab(env, f"{env.name} - While", Return=True)
         newenv.iamaloop()
         node.cond.accept(self, newenv)
-        for stmt in node.body:
-            stmt.accept(self, newenv)
+        try:
+            for stmt in node.body:
+                stmt.accept(self, newenv)
+        except:
+            node.body.accept(self, newenv)
     
     def visit(self, node: For, env: Symtab):
-        newenv = Symtab(env, "For")
+        newenv = Symtab(env, f"{env.name} - For", Return=True)
         newenv.iamaloop()
         if node.init:
             node.init.accept(self, newenv)
@@ -171,7 +178,7 @@ class Checker(Visitor):
             stmt.accept(self, newenv)
     
     def visit(self, node: IfStmt, env: Symtab):
-        newenv = Symtab(env, "If")
+        newenv = Symtab(env, f"{env.name} - If", Return=True)
         node.cond.accept(self, newenv)
         for param in node.cons:
             param.accept(self, newenv)
@@ -181,35 +188,50 @@ class Checker(Visitor):
     def visit(self, node: Return, env: Symtab):
         env.haveReturn()
         if node.expr:
-            node.expr.accept(self, env)
+            typeof = node.expr.accept(self, env)
+        else: 
+            typeof = None
+        scopes = env.name.split(" - ")
+        value = env.get(scopes[0])
+        if typeof != value:
+            self.error(f"Incompatible funcion tipo {value} devuelve {typeof} - linea {node.lineno}")
     
     def visit(self, node: Break, env: Symtab):
         if not env.amialoop():
             self.error(f"\x1b[1;31m" + "Break" + "\x1b[0;31m" +f" no esta dentro de un For/While, linea: {node.lineno}")
         
     def visit(self, node: Binary, env: Symtab):
-        node.left.accept(self, env)
-        node.right.accept(self, env)
+        left = node.left.accept(self, env)
+        right = node.right.accept(self, env)
+        if left != right :
+            self.error(f"Incompatible {left} {node.op} {right} - linea {node.lineno}")
+            return None
+        elif left == STR and node.op != '+':
+            self.error(f"Incompatible {left} {node.op} {right} - linea {node.lineno}")
+            return None
+        else:
+            return left
         
     def visit(self, node: Unary, env: Symtab):
-        node.expr.accept(self, env)
+        return node.expr.accept(self, env)
  
     def visit(self, node: Call, env: Symtab):
-
-       # node.func.accept(self, env)
+        typeof = node.func.accept(self, env)
         for param in node.args:
             param.accept(self, env)
+        return typeof
         
     def visit(self, node: ID, env: Symtab):
         value = env.get(node.name)
         if value is None:
             self.error(f'La Variable '+ "\x1b[1;31m" + f"{node.name}" + "\x1b[0;31m" + f' no esta definida, linea: {node.lineno}')
+        return value
             
     def visit(self, node: INUMBER, env: Symtab):
-        pass
+        return INT
     
     def visit(self, node: FNUMBER, env: Symtab):
-        pass
+        return FLOAT
     
     def visit(self, node: CONST, env: Symtab):
         pass
@@ -219,10 +241,10 @@ class Checker(Visitor):
             self.error(f"\x1b[1;31m" + "Continue" + "\x1b[0;31m" + f" no esta dentro de un For/While, linea: {node.lineno}")
     
     def visit(self, node: CHARACTER, env: Symtab):
-        pass
+        return CHAR
     
     def visit(self, node: string_literal, env: Symtab):
-        pass
+        return CHAR
     
     def visit(self, node: Array, env: Symtab):
         node.expr.accept(self, env)

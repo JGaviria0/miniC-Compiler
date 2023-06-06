@@ -17,7 +17,7 @@
 */
 extern int printf(char *str, ...);
 extern char *malloc(int size);
-extern int free(char *ptr);
+extern int free(char *ptr, int a);
 
 /*
     Prueba a variable externa. Cuantas veces llamamos a

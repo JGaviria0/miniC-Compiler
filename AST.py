@@ -124,6 +124,7 @@ class Binary(Expression):
 	left : Expression
 	op   : str
 	right: Expression
+	lineno: int = 0
 
 
 @dataclass
@@ -257,11 +258,7 @@ class RenderAST(Visitor):
         return name
     def visit(self, n:TypeDeclaration):
         name = self.name()
-        if type(n.body) != str:
-            self.dot.node(name, label=f"Param\nType:{n.Type} \n")
-            self.dot.edge(name, n.body.accept(self))
-        else: 
-             self.dot.node(name, label=f"Param\nType:{n.Type} \n name:{n.body}")
+        self.dot.node(name, label=f"Param\nType:{n.Type} \n name:{n.body}")
         return name
     
     def visit(self, n:Parameter_declaration):
@@ -284,9 +281,11 @@ class RenderAST(Visitor):
         self.dot.node(name, label=f'while\cond: ')
        
         self.dot.edge(name, n.cond.accept(self))
-        for i in n.body:
-            self.dot.edge(name, i.accept(self))
-        
+        try:
+            for i in n.body:
+                self.dot.edge(name, i.accept(self))
+        except:
+            self.dot.edge(name, n.body.accept(self))
         return name
     
     def visit(self, n:For):

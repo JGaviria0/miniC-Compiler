@@ -1,0 +1,8 @@
+argparse
+rich
+dataclasses
+multimethod
+graphviz
+typing
+colorama
+sly

@@ -11,20 +11,14 @@ las diferentes etapas del compilador propiamente dicho.
 '''
 
 import argparse
-from contextlib  import redirect_stdout
-from dataclasses import dataclass
-from rich        import print
-import sys
 from subprocess import check_call
+from rich        import print as print2
+from colorama import init, Fore, Back, Style
 
 from Lexer import Lexer
 from AST import *
 from Parser import Parser
 from checker import *
-# from mclex       import print_lexer
-# from mcparse     import Parser
-# from mcast       import *
-
 
 def parse_args():
     '''
@@ -88,11 +82,12 @@ if __name__ == '__main__':
         
         txt = open(i, encoding='utf-8').read()
         tokens = l.tokenize(txt)
+        if len(args.files) > 1:
+            print( "\x1b[1;33m" + f"{i}, -------------------------------------------" + Fore.RESET)
 
         if args.lex:
-            print(f"{i}, -------------------------------------------")
             for token in tokens: 
-                print(token)
+                print2(token)
         
         ast = p.parse(l.tokenize(txt))
         dot = RenderAST.render(ast)
@@ -109,7 +104,3 @@ if __name__ == '__main__':
             check_call(['dot','-Tpng',f'{i}.dot','-o',f'{i}.png'])
 
         checker = Checker().check(ast, symtable = args.sym)
-
-
-    # print("Archivo minic.txt creado con exito")
-    # print(ast)

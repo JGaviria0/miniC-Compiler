@@ -136,7 +136,7 @@ class Parser(sly.Parser):
 	   "equality_expression MULEQ expression",
 	   "equality_expression SUBEQ expression")
 	def assigment_expression(self, p):
-		return Binary(p.equality_expression,p[1],p.expression)
+		return Binary(p.equality_expression,p[1],p.expression, lineno=p.lineno)
 		
 	@_("relational_expression")
 	def equality_expression(self, p):
@@ -145,7 +145,7 @@ class Parser(sly.Parser):
 	@_("equality_expression EQ relational_expression",
 	   "equality_expression NE relational_expression")
 	def equality_expression(self, p):
-		return Binary(p.equality_expression,p[1],p.relational_expression)
+		return Binary(p.equality_expression,p[1],p.relational_expression, lineno=p.lineno)
 		
 	@_("additive_expression")
 	def relational_expression(self, p):
@@ -161,7 +161,7 @@ class Parser(sly.Parser):
 	   "relational_expression GE  additive_expression")
 	
 	def relational_expression(self, p):
-		return Binary(p.relational_expression,p[1],p.additive_expression)
+		return Binary(p.relational_expression,p[1],p.additive_expression, lineno=p.lineno)
 		
 	@_("primary_expression")
 	def postfix_expression(self, p):
@@ -220,7 +220,7 @@ class Parser(sly.Parser):
 	   "mult_expression '/' unary_expression",
 	   "mult_expression '%' unary_expression")
 	def mult_expression(self, p):
-		return Binary(p.mult_expression,p[1],p.unary_expression)
+		return Binary(p.mult_expression,p[1],p.unary_expression, lineno=p.lineno)
 		
 	@_("mult_expression")
 	def additive_expression(self, p):
@@ -229,7 +229,7 @@ class Parser(sly.Parser):
 	@_("additive_expression '+' mult_expression",
 	   "additive_expression '-' mult_expression")
 	def additive_expression(self, p):
-		return Binary(p.additive_expression,p[1],p.mult_expression)
+		return Binary(p.additive_expression,p[1],p.mult_expression, lineno=p.lineno)
 		
 	@_("ID")
 	def primary_expression(self, p):
